@@ -1,8 +1,10 @@
 const urls = {
   public: {
     root: '',
-    home: '/',
-    about: '/about',
+    welcome: '/',
+    main: '/main',
+    signIn: '/sign-in',
+    signUp: '/sign-up',
   },
 
   api: {},
