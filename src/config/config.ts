@@ -7,7 +7,9 @@ const urls = {
     signUp: '/sign-up',
   },
 
-  api: {},
+  api: {
+    baseURL: 'https://frozen-shelf-14063.herokuapp.com/',
+  },
 };
 
 export const config = {
