@@ -48,28 +48,35 @@ export function NavBar() {
         <Toolbar disableGutters sx={{ display: 'flex', justifyContent: 'space-between' }}>
           {/* Change logic when user sign in. */}
           {document.URL.split('localhost:3000').pop() !== config.urls.public.main ? (
-            <Box sx={{ display: 'flex', gap: '10px', marginLeft: 'auto' }}>
-              <Button onClick={() => navigate('/sign-in')} variant="contained">
-                Sign in
-              </Button>
-              <Button onClick={() => navigate('/sign-up')} variant="contained">
-                Sign up
-              </Button>
-            </Box>
+            <>
+              <CustomLink to={config.urls.public.root}>
+                <Typography variant="h6" noWrap component="div" sx={{ mr: 2 }}>
+                  {config.appTitle}
+                </Typography>
+              </CustomLink>
+              <Box sx={{ display: 'flex', gap: '10px' }}>
+                <Button onClick={() => navigate('/sign-in')} variant="contained">
+                  Sign in
+                </Button>
+                <Button onClick={() => navigate('/sign-up')} variant="contained">
+                  Sign up
+                </Button>
+              </Box>
+            </>
           ) : (
             <>
               <Box sx={{ display: 'flex', alignItems: 'center' }}>
+                <CustomLink to={config.urls.public.root}>
+                  <Typography variant="h6" noWrap component="div" sx={{ mr: 2 }}>
+                    {config.appTitle}
+                  </Typography>
+                </CustomLink>
                 <DesktopMenuItems handleCloseNavMenu={handleCloseNavMenu} />
                 <MobileMenuItems
                   anchorElNav={anchorEl}
                   handleOpenNavMenu={handleOpenNavMenu}
                   handleCloseNavMenu={handleCloseNavMenu}
                 />
-                <CustomLink to={config.urls.public.root}>
-                  <Typography variant="h6" noWrap component="div" sx={{ mr: 2 }}>
-                    {config.appTitle}
-                  </Typography>
-                </CustomLink>
               </Box>
               <Box sx={{ flexGrow: 0 }}>
                 <Tooltip title="Open settings">
