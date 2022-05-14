@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { useNavigate, useLocation } from 'react-router-dom';
 import AppBar from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
 import Toolbar from '@mui/material/Toolbar';
@@ -16,11 +17,13 @@ import { DesktopMenuItems } from './DesktopMenuItems';
 import { MobileMenuItems } from './MobileMenuItems';
 import { config } from '../../config';
 import { IHandleOpenMenu, IHandleCloseMenu } from './common';
-import { useNavigate } from 'react-router-dom';
 
 const settings = ['Profile', 'Sign out'];
 
 export function NavBar() {
+  const navigate = useNavigate();
+  const location = useLocation();
+
   const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
   const [anchorElUser, setAnchorElUser] = useState<null | HTMLElement>(null);
 
@@ -40,14 +43,12 @@ export function NavBar() {
     setAnchorElUser(null);
   };
 
-  const navigate = useNavigate();
-
   return (
     <AppBar position="sticky">
       <Container maxWidth="xl">
         <Toolbar disableGutters sx={{ display: 'flex', justifyContent: 'space-between' }}>
           {/* Change logic when user sign in. */}
-          {document.URL.split('localhost:3000').pop() !== config.urls.public.main ? (
+          {location.pathname !== config.urls.public.main ? (
             <>
               <CustomLink to={config.urls.public.root}>
                 <Typography variant="h6" noWrap component="div" sx={{ mr: 2 }}>
