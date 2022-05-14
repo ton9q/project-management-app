@@ -27,12 +27,12 @@ export type MenuItem = {
 
 export const menuItems: MenuItem[] = [
   {
-    title: 'Home',
-    link: config.urls.public.home,
+    title: 'Welcome',
+    link: config.urls.public.welcome,
   },
   {
-    title: 'About',
-    link: config.urls.public.about,
+    title: 'Main',
+    link: config.urls.public.main,
   },
 ];
 
