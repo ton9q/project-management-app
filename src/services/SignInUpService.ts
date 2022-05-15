@@ -13,7 +13,7 @@ export async function createUser(user: { name: string; login: string; password: 
   return await response;
 }
 
-export async function loginUser(user: { name: string; login: string; password: string }) {
+export async function loginUser(user: { login: string; password: string }) {
   const response = axios({
     method: 'post',
     url: `${baseURL}signin`,

@@ -2,9 +2,11 @@ import { configureStore } from '@reduxjs/toolkit';
 import { combineReducers } from 'redux';
 
 import formSignUpReducer from '../pages/SignUp/Reducer/FormSignUpSlice';
+import formSignInReducer from '../pages/SignIn/Reducer/FormSignInSlice';
 
 const rootReducer = combineReducers({
   formSignUpReducer,
+  formSignInReducer,
 });
 
 export const setupStore = () => {
