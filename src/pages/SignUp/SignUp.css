@@ -1,11 +1,23 @@
 .title-modal {
   text-align: center;
-  margin-bottom: 10px;
 }
 
 .paper-style {
   padding: 20px;
   height: 400px;
-  max-width: 320px;
+  width: 350px;
   margin: 20px;
+}
+
+.span-not-invalid {
+  position: absolute;
+  display: flex;
+  flex-direction: column;
+  top: 60px;
+  color: #fd3939;
+  font-size: 14px;
+}
+
+.container-input-message {
+  position: relative;
 }

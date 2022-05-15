@@ -9,6 +9,7 @@ export async function createUser(user: { name: string; login: string; password: 
     url: `${baseURL}signup`,
     data: user,
   });
+  console.log(await response);
   return await response;
 }
 
