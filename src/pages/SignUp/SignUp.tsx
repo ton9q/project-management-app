@@ -9,7 +9,7 @@ import { useAppDispatch, useAppSelector } from '../../hooks/redux';
 import Spinner from '../../components/Spinner/Spinner';
 import {
   onChangeName,
-  onChangeEmail,
+  onChangeLogin,
   onChangePassword,
   clearCurrentUser,
 } from './Reducer/FormSignUpSlice';
@@ -18,7 +18,7 @@ import './SignUp.css';
 export function SignUp() {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
-  const { name, email, password } = useAppSelector((state) => state.formSignUpReducer.currentUser);
+  const { name, login, password } = useAppSelector((state) => state.formSignUpReducer.currentUser);
   const {
     register,
     handleSubmit,
@@ -27,7 +27,7 @@ export function SignUp() {
   } = useForm({
     defaultValues: {
       name: name,
-      email: email,
+      login: login,
       password: password,
     },
   });
@@ -60,7 +60,7 @@ export function SignUp() {
   const onCreating = () => {
     createUser({
       name: name,
-      login: email,
+      login: login,
       password: password,
     })
       .then(() => {
@@ -110,24 +110,21 @@ export function SignUp() {
             </div>
             <div className="container-input-message">
               <TextField
-                {...register('email', {
+                {...register('login', {
                   required: true,
-                  pattern: {
-                    value:
-                      /[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?/i,
-                    message: 'email is not correct',
-                  },
+                  pattern: { value: /^[A-Za-z]+$/i, message: 'only letters of the Latin alphabet' },
+                  minLength: { value: 3, message: 'min length 3 letters' },
                 })}
                 style={inputModal}
-                name="email"
-                value={email}
-                label="email"
-                placeholder="Enter email"
+                name="login"
+                value={login}
+                label="login"
+                placeholder="Enter login"
                 fullWidth
                 required
-                onChange={(e) => dispatch(onChangeEmail((e.target as HTMLInputElement).value))}
+                onChange={(e) => dispatch(onChangeLogin((e.target as HTMLInputElement).value))}
               />
-              {errors.email && renderValidationMessage(errors.email?.message)}
+              {errors.login && renderValidationMessage(errors.login?.message)}
             </div>
             <div className="container-input-message">
               <TextField

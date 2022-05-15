@@ -3,7 +3,7 @@ import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 interface FormSignUpState {
   currentUser: {
     name: string;
-    email: string;
+    login: string;
     password: string;
   };
 }
@@ -11,7 +11,7 @@ interface FormSignUpState {
 const initialState: FormSignUpState = {
   currentUser: {
     name: '',
-    email: '',
+    login: '',
     password: '',
   },
 };
@@ -23,8 +23,8 @@ export const formSignUpSlice = createSlice({
     onChangeName(state, action: PayloadAction<string>) {
       state.currentUser.name = action.payload;
     },
-    onChangeEmail(state, action: PayloadAction<string>) {
-      state.currentUser.email = action.payload;
+    onChangeLogin(state, action: PayloadAction<string>) {
+      state.currentUser.login = action.payload;
     },
     onChangePassword(state, action: PayloadAction<string>) {
       state.currentUser.password = action.payload;
@@ -32,7 +32,7 @@ export const formSignUpSlice = createSlice({
     clearCurrentUser(state) {
       state.currentUser = {
         name: '',
-        email: '',
+        login: '',
         password: '',
       };
     },
@@ -40,5 +40,5 @@ export const formSignUpSlice = createSlice({
 });
 
 export default formSignUpSlice.reducer;
-export const { onChangeName, onChangeEmail, onChangePassword, clearCurrentUser } =
+export const { onChangeName, onChangeLogin, onChangePassword, clearCurrentUser } =
   formSignUpSlice.actions;
