@@ -1,11 +1,12 @@
 import { useEffect, useState, useCallback } from 'react';
+import { useNavigate, Link } from 'react-router-dom';
 import { AxiosError } from 'axios';
 import { useForm } from 'react-hook-form';
 import { Box, Grid, Paper, TextField, Typography, Button } from '@mui/material';
-import { Link } from 'react-router-dom';
 import { createUser } from '../../services/SignInUpService';
 import { config } from '../../config';
 import { useAppDispatch, useAppSelector } from '../../hooks/redux';
+import Spinner from '../../components/Spinner/Spinner';
 import {
   onChangeName,
   onChangeEmail,
@@ -16,6 +17,7 @@ import './SignUp.css';
 
 export function SignUp() {
   const dispatch = useAppDispatch();
+  const navigate = useNavigate();
   const { name, email, password } = useAppSelector((state) => state.formSignUpReducer.currentUser);
   const {
     register,
@@ -66,6 +68,7 @@ export function SignUp() {
         dispatch(clearCurrentUser());
         reset();
         setUserError('');
+        navigate('/sign-in');
       })
       .catch((error: AxiosError) => {
         setIsCreating(false);
@@ -76,7 +79,9 @@ export function SignUp() {
   const btnModalSubmit = { marginBottom: '12px', height: '40px' };
   const inputModal = { marginBottom: '30px' };
 
-  return (
+  return isCreating ? (
+    <Spinner />
+  ) : (
     <Box
       component="main"
       sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', py: 5, px: 2 }}
