@@ -9,6 +9,11 @@ import { useAppDispatch, useAppSelector } from '../../hooks/redux';
 import Spinner from '../../components/Spinner/Spinner';
 import { onChangeLogin, onChangePassword, clearCurrentUser } from './Reducer/FormSignInSlice';
 
+interface IUserInfo {
+  login: string;
+  token: string;
+}
+
 export function SignIn() {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
@@ -50,9 +55,14 @@ export function SignIn() {
     []
   );
 
+  const setLocalStorage = (userInfo: IUserInfo) => {
+    localStorage.setItem('userInfo', JSON.stringify(userInfo));
+  };
+
   const onLogin = () => {
     loginUser({ login: login, password: password })
-      .then(() => {
+      .then((response) => {
+        setLocalStorage({ login: login, token: response.data.token });
         setIsLogin(false);
         dispatch(clearCurrentUser());
         reset();
@@ -128,7 +138,7 @@ export function SignIn() {
             </Button>
             <Typography>
               Do you have an account?&nbsp;
-              <Link to={config.urls.public.signIn}>Sign Up</Link>
+              <Link to={config.urls.public.signUp}>Sign Up</Link>
             </Typography>
           </form>
         </Paper>
