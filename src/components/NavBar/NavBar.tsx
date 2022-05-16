@@ -1,31 +1,40 @@
 import { useState } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
+
 import AppBar from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
 import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import Button from '@mui/material/Button';
-import Tooltip from '@mui/material/Tooltip';
-import IconButton from '@mui/material/IconButton';
-import Avatar from '@mui/material/Avatar';
-import Menu from '@mui/material/Menu';
-import MenuItem from '@mui/material/MenuItem';
 
 import { CustomLink } from '../CustomLink';
 import { DesktopMenuItems } from './DesktopMenuItems';
 import { MobileMenuItems } from './MobileMenuItems';
-import { config } from '../../config';
-import { IHandleOpenMenu, IHandleCloseMenu } from './common';
 
-const settings = ['Profile', 'Sign out'];
+import { config, localization } from '../../config';
+import { IHandleOpenMenu, IHandleCloseMenu } from './common';
+import { LanguageSwitcher } from './LanguageSwitcher';
+import { UserMenu } from './UserMenu';
+
+function AppLogo() {
+  return (
+    <CustomLink to={config.urls.public.root}>
+      <Typography variant="h6" noWrap component="div" sx={{ mr: 2 }}>
+        {config.appTitle}
+      </Typography>
+    </CustomLink>
+  );
+}
 
 export function NavBar() {
   const navigate = useNavigate();
   const location = useLocation();
+  const { t, i18n } = useTranslation('common');
 
   const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
-  const [anchorElUser, setAnchorElUser] = useState<null | HTMLElement>(null);
+  const [language, setLanguage] = useState<localization.Languages>(localization.defaultLanguage);
 
   const handleOpenNavMenu: IHandleOpenMenu = (event) => {
     setAnchorEl(event.currentTarget);
@@ -35,12 +44,9 @@ export function NavBar() {
     setAnchorEl(null);
   };
 
-  const handleOpenUserMenu = (event: React.MouseEvent<HTMLElement>) => {
-    setAnchorElUser(event.currentTarget);
-  };
-
-  const handleCloseUserMenu = () => {
-    setAnchorElUser(null);
+  const handleLanguageChange = (language: localization.Languages) => {
+    setLanguage(language);
+    i18n.changeLanguage(language);
   };
 
   return (
@@ -50,28 +56,21 @@ export function NavBar() {
           {/* Change logic when user sign in. */}
           {location.pathname !== config.urls.public.main ? (
             <>
-              <CustomLink to={config.urls.public.root}>
-                <Typography variant="h6" noWrap component="div" sx={{ mr: 2 }}>
-                  {config.appTitle}
-                </Typography>
-              </CustomLink>
+              <AppLogo />
               <Box sx={{ display: 'flex', gap: '10px' }}>
                 <Button onClick={() => navigate('/sign-in')} variant="contained">
-                  Sign in
+                  {t('navbar.sign_in')}
                 </Button>
                 <Button onClick={() => navigate('/sign-up')} variant="contained">
-                  Sign up
+                  {t('navbar.sign_up')}
                 </Button>
               </Box>
+              <LanguageSwitcher language={language} onChange={handleLanguageChange} />
             </>
           ) : (
             <>
               <Box sx={{ display: 'flex', alignItems: 'center' }}>
-                <CustomLink to={config.urls.public.root}>
-                  <Typography variant="h6" noWrap component="div" sx={{ mr: 2 }}>
-                    {config.appTitle}
-                  </Typography>
-                </CustomLink>
+                <AppLogo />
                 <DesktopMenuItems handleCloseNavMenu={handleCloseNavMenu} />
                 <MobileMenuItems
                   anchorElNav={anchorEl}
@@ -79,34 +78,9 @@ export function NavBar() {
                   handleCloseNavMenu={handleCloseNavMenu}
                 />
               </Box>
-              <Box sx={{ flexGrow: 0 }}>
-                <Tooltip title="Open settings">
-                  <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-                    <Avatar alt="Avatar" src="" />
-                  </IconButton>
-                </Tooltip>
-                <Menu
-                  sx={{ mt: '45px' }}
-                  id="menu-appbar"
-                  anchorEl={anchorElUser}
-                  anchorOrigin={{
-                    vertical: 'top',
-                    horizontal: 'right',
-                  }}
-                  keepMounted
-                  transformOrigin={{
-                    vertical: 'top',
-                    horizontal: 'right',
-                  }}
-                  open={Boolean(anchorElUser)}
-                  onClose={handleCloseUserMenu}
-                >
-                  {settings.map((setting) => (
-                    <MenuItem key={setting} onClick={handleCloseUserMenu}>
-                      <Typography textAlign="center">{setting}</Typography>
-                    </MenuItem>
-                  ))}
-                </Menu>
+              <Box sx={{ display: 'flex', gap: '10px', alignItems: 'center' }}>
+                <LanguageSwitcher language={language} onChange={handleLanguageChange} />
+                <UserMenu />
               </Box>
             </>
           )}
