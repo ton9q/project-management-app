@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 
@@ -13,10 +13,13 @@ import { CustomLink } from '../CustomLink';
 import { DesktopMenuItems } from './DesktopMenuItems';
 import { MobileMenuItems } from './MobileMenuItems';
 
+import { LocalStorage } from '../../utils/localStorage';
 import { config, localization } from '../../config';
 import { IHandleOpenMenu, IHandleCloseMenu } from './common';
 import { LanguageSwitcher } from './LanguageSwitcher';
 import { UserMenu } from './UserMenu';
+
+const languageVariable = 'language';
 
 function AppLogo() {
   return (
@@ -34,7 +37,14 @@ export function NavBar() {
   const { t, i18n } = useTranslation('common');
 
   const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
-  const [language, setLanguage] = useState<localization.Languages>(localization.defaultLanguage);
+  const [language, setLanguage] = useState<localization.Languages>(
+    LocalStorage.getItem(languageVariable) || localization.defaultLanguage
+  );
+
+  useEffect(() => {
+    i18n.changeLanguage(language);
+    LocalStorage.setItem(languageVariable, language);
+  }, [i18n, language]);
 
   const handleOpenNavMenu: IHandleOpenMenu = (event) => {
     setAnchorEl(event.currentTarget);
@@ -46,7 +56,6 @@ export function NavBar() {
 
   const handleLanguageChange = (language: localization.Languages) => {
     setLanguage(language);
-    i18n.changeLanguage(language);
   };
 
   return (
@@ -57,7 +66,8 @@ export function NavBar() {
           {location.pathname !== config.urls.public.main ? (
             <>
               <AppLogo />
-              <Box sx={{ display: 'flex', gap: '10px' }}>
+              <Box sx={{ display: 'flex', gap: '10px', alignItems: 'center' }}>
+                <LanguageSwitcher language={language} onChange={handleLanguageChange} />
                 <Button onClick={() => navigate('/sign-in')} variant="contained">
                   {t('navbar.sign_in')}
                 </Button>
@@ -65,7 +75,6 @@ export function NavBar() {
                   {t('navbar.sign_up')}
                 </Button>
               </Box>
-              <LanguageSwitcher language={language} onChange={handleLanguageChange} />
             </>
           ) : (
             <>

@@ -10,9 +10,9 @@ export default i18n
   .use(LanguageDetector)
   .use(initReactI18next) // bind react-i18next to the instance
   .init({
-    fallbackLng: 'en',
-    debug: true,
+    // debug: true,
 
+    fallbackLng: 'en',
     lng: 'en',
 
     ns: ['common'],
@@ -33,6 +33,6 @@ export default i18n
     },
 
     react: {
-      useSuspense: false,
+      useSuspense: true,
     },
   });
