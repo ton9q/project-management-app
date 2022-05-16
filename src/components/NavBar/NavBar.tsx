@@ -57,7 +57,8 @@ export function NavBar() {
           {location.pathname !== config.urls.public.main ? (
             <>
               <AppLogo />
-              <Box sx={{ display: 'flex', gap: '10px' }}>
+              <Box sx={{ display: 'flex', gap: '10px', alignItems: 'center' }}>
+                <LanguageSwitcher language={language} onChange={handleLanguageChange} />
                 <Button onClick={() => navigate('/sign-in')} variant="contained">
                   {t('navbar.sign_in')}
                 </Button>
@@ -65,7 +66,6 @@ export function NavBar() {
                   {t('navbar.sign_up')}
                 </Button>
               </Box>
-              <LanguageSwitcher language={language} onChange={handleLanguageChange} />
             </>
           ) : (
             <>

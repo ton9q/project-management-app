@@ -1,5 +1,6 @@
 import { useEffect, useState, useCallback } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import { AxiosError } from 'axios';
 import { useForm } from 'react-hook-form';
 import { Box, Grid, Paper, TextField, Typography, Button } from '@mui/material';
@@ -16,6 +17,7 @@ import {
 import '../../App.css';
 
 export function SignUp() {
+  const { t } = useTranslation(['common', 'page_registration']);
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
   const { name, login, password } = useAppSelector((state) => state.formSignUpReducer.currentUser);
@@ -89,7 +91,7 @@ export function SignUp() {
       <Grid className="login-modal">
         <Paper elevation={24} className="form-container">
           <form onSubmit={handleSubmit(onSubmit)}>
-            <h2 className="form-title">Sign Up</h2>
+            <h2 className="form-title">{t('common:navbar.sign_up')}</h2>
             <div className="form-container-input-message">
               <TextField
                 {...register('name', {
@@ -100,10 +102,9 @@ export function SignUp() {
                 style={inputModal}
                 name="name"
                 value={name}
-                label="name"
-                placeholder="Enter username"
+                label={t('page_registration:user.name')}
+                placeholder={t('page_registration:placeholder.name')}
                 fullWidth
-                required
                 onChange={(e) => dispatch(onChangeName((e.target as HTMLInputElement).value))}
               />
               {errors.name && renderValidationMessage(errors.name?.message)}
@@ -118,10 +119,9 @@ export function SignUp() {
                 style={inputModal}
                 name="login"
                 value={login}
-                label="login"
-                placeholder="Enter login"
+                label={t('page_registration:user.login')}
+                placeholder={t('page_registration:placeholder.login')}
                 fullWidth
-                required
                 onChange={(e) => dispatch(onChangeLogin((e.target as HTMLInputElement).value))}
               />
               {errors.login && renderValidationMessage(errors.login?.message)}
@@ -136,11 +136,10 @@ export function SignUp() {
                 style={inputModal}
                 name="password"
                 value={password}
-                label="Password"
-                placeholder="Enter password"
+                label={t('page_registration:user.password')}
+                placeholder={t('page_registration:placeholder.password')}
                 type="password"
                 fullWidth
-                required
                 onChange={(e) => dispatch(onChangePassword((e.target as HTMLInputElement).value))}
               />
               {errors.password && renderValidationMessage(errors.password?.message)}
@@ -153,11 +152,11 @@ export function SignUp() {
               style={btnModalSubmit}
               fullWidth
             >
-              Sign Up
+              {t('common:navbar.sign_up')}
             </Button>
             <Typography>
               Do you have an account?&nbsp;
-              <Link to={config.urls.public.signIn}>Sign In</Link>
+              <Link to={config.urls.public.signIn}>{t('common:navbar.sign_in')}</Link>
             </Typography>
           </form>
         </Paper>
