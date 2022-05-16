@@ -1,3 +1,4 @@
+import { useTranslation } from 'react-i18next';
 import Box from '@mui/material/Box';
 import IconButton from '@mui/material/IconButton';
 import Typography from '@mui/material/Typography';
@@ -22,6 +23,8 @@ type Props = {
 };
 
 export function MobileMenuItems({ anchorElNav, handleOpenNavMenu, handleCloseNavMenu }: Props) {
+  const { t } = useTranslation('common');
+
   return (
     <Box sx={{ display: { xs: 'flex', [mobileMenuBreakPoint]: 'none' } }}>
       <IconButton
@@ -35,22 +38,23 @@ export function MobileMenuItems({ anchorElNav, handleOpenNavMenu, handleCloseNav
         <MenuIcon />
       </IconButton>
       <Menu
+        sx={{
+          display: { xs: 'block', md: 'none' },
+          mt: '5px',
+        }}
         id="menu-appbar"
         anchorEl={anchorElNav}
         anchorOrigin={{
           vertical: 'bottom',
-          horizontal: 'left',
+          horizontal: 'right',
         }}
         keepMounted
         transformOrigin={{
           vertical: 'top',
-          horizontal: 'left',
+          horizontal: 'right',
         }}
         open={Boolean(anchorElNav)}
         onClose={handleCloseNavMenu}
-        sx={{
-          display: { xs: 'block', md: 'none' },
-        }}
       >
         {menuItems.map((menuItem) => (
           <CustomLink
@@ -60,7 +64,7 @@ export function MobileMenuItems({ anchorElNav, handleOpenNavMenu, handleCloseNav
             styleForActive={styleForActive}
           >
             <MenuItem onClick={handleCloseNavMenu}>
-              <Typography textAlign="center">{menuItem.title}</Typography>
+              <Typography textAlign="center">{t(menuItem.title as 'pages.main')}</Typography>
             </MenuItem>
           </CustomLink>
         ))}
