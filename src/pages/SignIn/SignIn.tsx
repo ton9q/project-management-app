@@ -8,6 +8,7 @@ import { config } from '../../config';
 import { useAppDispatch, useAppSelector } from '../../hooks/redux';
 import Spinner from '../../components/Spinner/Spinner';
 import { onChangeLogin, onChangePassword, clearCurrentUser } from './Reducer/FormSignInSlice';
+import '../../App';
 
 interface IUserInfo {
   login: string;
@@ -45,13 +46,13 @@ export function SignIn() {
 
   const renderValidationMessage = useCallback(
     (message: string | undefined) => (
-      <span className={'span-not-invalid'}>{message || 'this field is required'}</span>
+      <span className={'form-span-not-invalid'}>{message || 'this field is required'}</span>
     ),
     []
   );
 
   const renderUserSignInError = useCallback(
-    (userError: string) => <span className={'span-not-invalid'}>{userError}</span>,
+    (userError: string) => <span className={'form-span-not-invalid'}>{userError}</span>,
     []
   );
 
@@ -86,10 +87,10 @@ export function SignIn() {
       sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', py: 5, px: 2 }}
     >
       <Grid className="login-modal">
-        <Paper elevation={24} className="paper-style">
+        <Paper elevation={24} className="form-container">
           <form onSubmit={handleSubmit(onSubmit)}>
-            <h2 className="title-modal">Sign In</h2>
-            <div className="container-input-message">
+            <h2 className="form-title">Sign In</h2>
+            <div className="form-container-input-message">
               <TextField
                 {...register('login', {
                   required: true,
@@ -107,7 +108,7 @@ export function SignIn() {
               />
               {errors.login && renderValidationMessage(errors.login?.message)}
             </div>
-            <div className="container-input-message">
+            <div className="form-container-input-message">
               <TextField
                 {...register('password', {
                   required: true,

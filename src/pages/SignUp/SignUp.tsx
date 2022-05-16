@@ -13,7 +13,7 @@ import {
   onChangePassword,
   clearCurrentUser,
 } from './Reducer/FormSignUpSlice';
-import './SignUp.css';
+import '../../App';
 
 export function SignUp() {
   const dispatch = useAppDispatch();
@@ -47,13 +47,13 @@ export function SignUp() {
 
   const renderValidationMessage = useCallback(
     (message: string | undefined) => (
-      <span className={'span-not-invalid'}>{message || 'this field is required'}</span>
+      <span className={'form-span-not-invalid'}>{message || 'this field is required'}</span>
     ),
     []
   );
 
   const renderUserCreatingError = useCallback(
-    (userError: string) => <span className={'span-not-invalid'}>{userError}</span>,
+    (userError: string) => <span className={'form-span-not-invalid'}>{userError}</span>,
     []
   );
 
@@ -87,10 +87,10 @@ export function SignUp() {
       sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', py: 5, px: 2 }}
     >
       <Grid className="login-modal">
-        <Paper elevation={24} className="paper-style">
+        <Paper elevation={24} className="form-container">
           <form onSubmit={handleSubmit(onSubmit)}>
-            <h2 className="title-modal">Sign Up</h2>
-            <div className="container-input-message">
+            <h2 className="form-title">Sign Up</h2>
+            <div className="form-container-input-message">
               <TextField
                 {...register('name', {
                   required: true,
@@ -108,7 +108,7 @@ export function SignUp() {
               />
               {errors.name && renderValidationMessage(errors.name?.message)}
             </div>
-            <div className="container-input-message">
+            <div className="form-container-input-message">
               <TextField
                 {...register('login', {
                   required: true,
@@ -126,7 +126,7 @@ export function SignUp() {
               />
               {errors.login && renderValidationMessage(errors.login?.message)}
             </div>
-            <div className="container-input-message">
+            <div className="form-container-input-message">
               <TextField
                 {...register('password', {
                   required: true,

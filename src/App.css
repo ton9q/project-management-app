@@ -1,0 +1,23 @@
+.form-title {
+  text-align: center;
+}
+
+.form-container {
+  padding: 20px;
+  height: 400px;
+  width: 350px;
+  margin: 20px;
+}
+
+.form-span-not-invalid {
+  position: absolute;
+  display: flex;
+  flex-direction: column;
+  top: 60px;
+  color: #fd3939;
+  font-size: 14px;
+}
+
+.form-container-input-message {
+  position: relative;
+}
