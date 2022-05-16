@@ -1,4 +1,4 @@
-import React from 'react';
+import { useTranslation } from 'react-i18next';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import { CustomLink } from '../CustomLink';
@@ -16,6 +16,8 @@ type Props = {
 };
 
 export function DesktopMenuItems({ handleCloseNavMenu }: Props) {
+  const { t } = useTranslation('common');
+
   return (
     <Box sx={{ display: { xs: 'none', [mobileMenuBreakPoint]: 'flex' } }}>
       {menuItems.map((menuItem) => (
@@ -37,7 +39,7 @@ export function DesktopMenuItems({ handleCloseNavMenu }: Props) {
               padding: '20px 10px',
             }}
           >
-            {menuItem.title}
+            {t(menuItem.title as 'pages.main')}
           </Button>
         </CustomLink>
       ))}
