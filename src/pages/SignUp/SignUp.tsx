@@ -13,7 +13,7 @@ import {
   onChangePassword,
   clearCurrentUser,
 } from './Reducer/FormSignUpSlice';
-import '../../App';
+import '../../App.css';
 
 export function SignUp() {
   const dispatch = useAppDispatch();
