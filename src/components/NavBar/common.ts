@@ -27,10 +27,6 @@ export type MenuItem = {
 
 export const menuItems: MenuItem[] = [
   {
-    title: 'pages.welcome',
-    link: config.urls.public.welcome,
-  },
-  {
     title: 'pages.main',
     link: config.urls.public.main,
   },
