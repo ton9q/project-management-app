@@ -11,7 +11,7 @@ import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
 import { createUser } from '../../services/api';
 import { config } from '../../config';
-import { useAppDispatch, useAppSelector } from '../../Store';
+import { useAppDispatch, useAppSelector } from '../../appStore';
 import { Loading } from '../../components/Loading';
 import {
   onChangeName,
