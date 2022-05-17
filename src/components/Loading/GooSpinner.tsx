@@ -81,8 +81,11 @@ function move({ translateTo, sizeUnit }: { translateTo: number; sizeUnit: string
 `;
 }
 
+const shouldForwardProp = (prop: string) =>
+  !['size', 'x', 'y', 'color', 'translateTo', 'sizeUnit'].includes(prop);
+
 const Wrapper = styled('div', {
-  shouldForwardProp: () => true,
+  shouldForwardProp: shouldForwardProp,
 })<{ size: number; sizeUnit: string }>((props) => ({
   width: `${props.size}${props.sizeUnit}`,
   height: `${props.size}${props.sizeUnit}`,
@@ -90,7 +93,7 @@ const Wrapper = styled('div', {
 }));
 
 const BallsWrapper = styled('div', {
-  shouldForwardProp: () => true,
+  shouldForwardProp: shouldForwardProp,
 })<{ size: number; sizeUnit: string }>((props) => ({
   position: 'relative',
   width: `${props.size}${props.sizeUnit}`,
@@ -99,7 +102,7 @@ const BallsWrapper = styled('div', {
 }));
 
 const Ball = styled('div', {
-  shouldForwardProp: () => true,
+  shouldForwardProp: shouldForwardProp,
 })<{ size: number; sizeUnit: string; x: number; y: number; color: string; translateTo: number }>(
   (props) => ({
     position: 'absolute',
