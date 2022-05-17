@@ -62,7 +62,6 @@ export function NavBar() {
     <AppBar position="sticky">
       <Container maxWidth="xl">
         <Toolbar disableGutters sx={{ display: 'flex', justifyContent: 'space-between' }}>
-          {/* Change logic when user sign in. */}
           {location.pathname !== config.urls.public.main ? (
             <>
               <AppLogo />

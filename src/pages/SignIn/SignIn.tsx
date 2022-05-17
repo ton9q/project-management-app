@@ -3,18 +3,20 @@ import { useNavigate, Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { AxiosError } from 'axios';
 import { useForm } from 'react-hook-form';
-import { Box, Grid, Paper, TextField, Typography, Button } from '@mui/material';
-import { loginUser } from '../../services/SignInUpService';
+import Button from '@mui/material/Button';
+import Box from '@mui/material/Box';
+import Grid from '@mui/material/Grid';
+import Paper from '@mui/material/Paper';
+import TextField from '@mui/material/TextField';
+import Typography from '@mui/material/Typography';
+import { loginUser } from '../../services/api';
 import { config } from '../../config';
-import { useAppDispatch, useAppSelector } from '../../hooks/redux';
+import { LocalStorage } from '../../utils/localStorage';
+import { useAppDispatch, useAppSelector } from '../../store/hooks';
 import { Loading } from '../../components/Loading';
-import { onChangeLogin, onChangePassword, clearCurrentUser } from './Reducer/FormSignInSlice';
-import '../../App.css';
+import { onChangeLogin, onChangePassword, clearCurrentUser } from './formSignInReducer';
 
-interface IUserInfo {
-  login: string;
-  token: string;
-}
+const USER_INFO = 'userInfo';
 
 export function SignIn() {
   const { t } = useTranslation(['common', 'pages_registration']);
@@ -40,7 +42,7 @@ export function SignIn() {
     () =>
       loginUser({ login: login, password: password })
         .then((response) => {
-          setLocalStorage({ login: login, token: response.data.token });
+          LocalStorage.setItem(USER_INFO, { login: login, token: response.data.token });
           setIsLogin(false);
           dispatch(clearCurrentUser());
           reset();
@@ -66,19 +68,39 @@ export function SignIn() {
 
   const renderValidationMessage = useCallback(
     (message: string | undefined) => (
-      <span className={'form-span-not-invalid'}>{message || 'this field is required'}</span>
+      <span
+        style={{
+          position: 'absolute',
+          display: 'flex',
+          flexDirection: 'column',
+          top: '60px',
+          color: '#fd3939',
+          fontSize: '14px',
+        }}
+      >
+        {message || 'this field is required'}
+      </span>
     ),
     []
   );
 
   const renderUserSignInError = useCallback(
-    (userError: string) => <span className={'form-span-not-invalid'}>{userError}</span>,
+    (userError: string) => (
+      <span
+        style={{
+          position: 'absolute',
+          display: 'flex',
+          flexDirection: 'column',
+          top: '60px',
+          color: '#fd3939',
+          fontSize: '14px',
+        }}
+      >
+        {userError}
+      </span>
+    ),
     []
   );
-
-  const setLocalStorage = (userInfo: IUserInfo) => {
-    localStorage.setItem('userInfo', JSON.stringify(userInfo));
-  };
 
   const btnModalSubmit = { marginBottom: '12px', height: '40px' };
   const inputModal = { marginBottom: '30px' };
@@ -90,10 +112,13 @@ export function SignIn() {
         sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', py: 5, px: 2 }}
       >
         <Grid className="login-modal">
-          <Paper elevation={24} className="form-container">
+          <Paper
+            elevation={24}
+            sx={{ padding: '20px', height: '400px', width: '350px', margin: '20px' }}
+          >
             <form onSubmit={handleSubmit(onSubmit)}>
-              <h2 className="form-title">{t('common:navbar.sign_in')}</h2>
-              <div className="form-container-input-message">
+              <h2 style={{ textAlign: 'center' }}>{t('common:navbar.sign_in')}</h2>
+              <Box sx={{ position: 'relative' }}>
                 <TextField
                   {...register('login', {
                     required: true,
@@ -112,8 +137,8 @@ export function SignIn() {
                   onChange={(e) => dispatch(onChangeLogin((e.target as HTMLInputElement).value))}
                 />
                 {errors.login && renderValidationMessage(errors.login?.message)}
-              </div>
-              <div className="form-container-input-message">
+              </Box>
+              <Box sx={{ position: 'relative' }}>
                 <TextField
                   {...register('password', {
                     required: true,
@@ -134,7 +159,7 @@ export function SignIn() {
                 />
                 {errors.password && renderValidationMessage(errors.password?.message)}
                 {userError && renderUserSignInError(userError)}
-              </div>
+              </Box>
               <Button
                 type="submit"
                 color="primary"

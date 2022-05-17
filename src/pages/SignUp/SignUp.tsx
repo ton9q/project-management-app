@@ -3,18 +3,22 @@ import { useNavigate, Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { AxiosError } from 'axios';
 import { useForm } from 'react-hook-form';
-import { Box, Grid, Paper, TextField, Typography, Button } from '@mui/material';
-import { createUser } from '../../services/SignInUpService';
+import Button from '@mui/material/Button';
+import Box from '@mui/material/Box';
+import Grid from '@mui/material/Grid';
+import Paper from '@mui/material/Paper';
+import TextField from '@mui/material/TextField';
+import Typography from '@mui/material/Typography';
+import { createUser } from '../../services/api';
 import { config } from '../../config';
-import { useAppDispatch, useAppSelector } from '../../hooks/redux';
+import { useAppDispatch, useAppSelector } from '../../store/hooks';
 import { Loading } from '../../components/Loading';
 import {
   onChangeName,
   onChangeLogin,
   onChangePassword,
   clearCurrentUser,
-} from './Reducer/FormSignUpSlice';
-import '../../App.css';
+} from './formSignUpReducer';
 
 export function SignUp() {
   const { t } = useTranslation(['common', 'pages_registration']);
@@ -58,25 +62,6 @@ export function SignUp() {
     [dispatch, name, login, password, navigate, reset]
   );
 
-  // const onCreating = () => {
-  //   createUser({
-  //     name: name,
-  //     login: login,
-  //     password: password,
-  //   })
-  //     .then(() => {
-  //       setIsCreating(false);
-  //       dispatch(clearCurrentUser());
-  //       reset();
-  //       setUserError('');
-  //       navigate('/sign-in');
-  //     })
-  //     .catch((error: AxiosError) => {
-  //       setIsCreating(false);
-  //       setUserError((error.response?.data as { statusCode: number; message: string }).message);
-  //     });
-  // };
-
   useEffect(() => {
     if (isCreating) {
       onCreating();
@@ -89,13 +74,37 @@ export function SignUp() {
 
   const renderValidationMessage = useCallback(
     (message: string | undefined) => (
-      <span className={'form-span-not-invalid'}>{message || 'this field is required'}</span>
+      <span
+        style={{
+          position: 'absolute',
+          display: 'flex',
+          flexDirection: 'column',
+          top: '60px',
+          color: '#fd3939',
+          fontSize: '14px',
+        }}
+      >
+        {message || 'this field is required'}
+      </span>
     ),
     []
   );
 
   const renderUserCreatingError = useCallback(
-    (userError: string) => <span className={'form-span-not-invalid'}>{userError}</span>,
+    (userError: string) => (
+      <span
+        style={{
+          position: 'absolute',
+          display: 'flex',
+          flexDirection: 'column',
+          top: '60px',
+          color: '#fd3939',
+          fontSize: '14px',
+        }}
+      >
+        {userError}
+      </span>
+    ),
     []
   );
 
@@ -109,10 +118,13 @@ export function SignUp() {
         sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', py: 5, px: 2 }}
       >
         <Grid className="login-modal">
-          <Paper elevation={24} className="form-container">
+          <Paper
+            elevation={24}
+            sx={{ padding: '20px', height: '400px', width: '350px', margin: '20px' }}
+          >
             <form onSubmit={handleSubmit(onSubmit)}>
-              <h2 className="form-title">{t('common:navbar.sign_up')}</h2>
-              <div className="form-container-input-message">
+              <h2 style={{ textAlign: 'center' }}>{t('common:navbar.sign_up')}</h2>
+              <Box sx={{ position: 'relative' }}>
                 <TextField
                   {...register('name', {
                     required: true,
@@ -131,8 +143,8 @@ export function SignUp() {
                   onChange={(e) => dispatch(onChangeName((e.target as HTMLInputElement).value))}
                 />
                 {errors.name && renderValidationMessage(errors.name?.message)}
-              </div>
-              <div className="form-container-input-message">
+              </Box>
+              <Box sx={{ position: 'relative' }}>
                 <TextField
                   {...register('login', {
                     required: true,
@@ -151,8 +163,8 @@ export function SignUp() {
                   onChange={(e) => dispatch(onChangeLogin((e.target as HTMLInputElement).value))}
                 />
                 {errors.login && renderValidationMessage(errors.login?.message)}
-              </div>
-              <div className="form-container-input-message">
+              </Box>
+              <Box sx={{ position: 'relative' }}>
                 <TextField
                   {...register('password', {
                     required: true,
@@ -173,7 +185,7 @@ export function SignUp() {
                 />
                 {errors.password && renderValidationMessage(errors.password?.message)}
                 {userError && renderUserCreatingError(userError)}
-              </div>
+              </Box>
               <Button
                 type="submit"
                 color="primary"

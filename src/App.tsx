@@ -1,7 +1,9 @@
 import { Route, Routes, BrowserRouter } from 'react-router-dom';
 import { ErrorBoundary } from 'react-error-boundary';
 import { Provider } from 'react-redux';
-import { CssBaseline, Box, ThemeProvider } from '@mui/material';
+import CssBaseline from '@mui/material/CssBaseline';
+import Box from '@mui/material/Box';
+import { ThemeProvider } from '@mui/material/styles';
 
 import { ErrorFallback } from './components/ErrorFallback';
 import { Layout } from './components/Layout';
@@ -14,7 +16,7 @@ import { NotFound } from './pages/NotFound';
 
 import { theme } from './theme';
 import { config } from './config';
-import { setupStore } from './Store/store';
+import { setupStore } from './store';
 
 function App() {
   const store = setupStore();
