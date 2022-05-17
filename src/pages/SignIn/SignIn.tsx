@@ -36,11 +36,29 @@ export function SignIn() {
   const [isLogin, setIsLogin] = useState(false);
   const [userError, setUserError] = useState<string | undefined>('');
 
+  const onLogin = useCallback(
+    () =>
+      loginUser({ login: login, password: password })
+        .then((response) => {
+          setLocalStorage({ login: login, token: response.data.token });
+          setIsLogin(false);
+          dispatch(clearCurrentUser());
+          reset();
+          setUserError('');
+          navigate('/main');
+        })
+        .catch((error: AxiosError) => {
+          setIsLogin(false);
+          setUserError((error.response?.data as { statusCode: number; message: string }).message);
+        }),
+    [dispatch, login, password, navigate, reset]
+  );
+
   useEffect(() => {
     if (isLogin) {
       onLogin();
     }
-  }, [isLogin]);
+  }, [isLogin, onLogin]);
 
   const onSubmit = () => {
     setIsLogin(true);
@@ -60,22 +78,6 @@ export function SignIn() {
 
   const setLocalStorage = (userInfo: IUserInfo) => {
     localStorage.setItem('userInfo', JSON.stringify(userInfo));
-  };
-
-  const onLogin = () => {
-    loginUser({ login: login, password: password })
-      .then((response) => {
-        setLocalStorage({ login: login, token: response.data.token });
-        setIsLogin(false);
-        dispatch(clearCurrentUser());
-        reset();
-        setUserError('');
-        navigate('/main');
-      })
-      .catch((error: AxiosError) => {
-        setIsLogin(false);
-        setUserError((error.response?.data as { statusCode: number; message: string }).message);
-      });
   };
 
   const btnModalSubmit = { marginBottom: '12px', height: '40px' };

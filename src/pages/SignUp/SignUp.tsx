@@ -37,11 +37,51 @@ export function SignUp() {
   const [isCreating, setIsCreating] = useState(false);
   const [userError, setUserError] = useState<string | undefined>('');
 
+  const onCreating = useCallback(
+    () =>
+      createUser({
+        name: name,
+        login: login,
+        password: password,
+      })
+        .then(() => {
+          setIsCreating(false);
+          dispatch(clearCurrentUser());
+          reset();
+          setUserError('');
+          navigate('/sign-in');
+        })
+        .catch((error: AxiosError) => {
+          setIsCreating(false);
+          setUserError((error.response?.data as { statusCode: number; message: string }).message);
+        }),
+    [dispatch, name, login, password, navigate, reset]
+  );
+
+  // const onCreating = () => {
+  //   createUser({
+  //     name: name,
+  //     login: login,
+  //     password: password,
+  //   })
+  //     .then(() => {
+  //       setIsCreating(false);
+  //       dispatch(clearCurrentUser());
+  //       reset();
+  //       setUserError('');
+  //       navigate('/sign-in');
+  //     })
+  //     .catch((error: AxiosError) => {
+  //       setIsCreating(false);
+  //       setUserError((error.response?.data as { statusCode: number; message: string }).message);
+  //     });
+  // };
+
   useEffect(() => {
     if (isCreating) {
       onCreating();
     }
-  }, [isCreating]);
+  }, [isCreating, onCreating]);
 
   const onSubmit = () => {
     setIsCreating(true);
@@ -58,25 +98,6 @@ export function SignUp() {
     (userError: string) => <span className={'form-span-not-invalid'}>{userError}</span>,
     []
   );
-
-  const onCreating = () => {
-    createUser({
-      name: name,
-      login: login,
-      password: password,
-    })
-      .then(() => {
-        setIsCreating(false);
-        dispatch(clearCurrentUser());
-        reset();
-        setUserError('');
-        navigate('/sign-in');
-      })
-      .catch((error: AxiosError) => {
-        setIsCreating(false);
-        setUserError((error.response?.data as { statusCode: number; message: string }).message);
-      });
-  };
 
   const btnModalSubmit = { marginBottom: '12px', height: '40px' };
   const inputModal = { marginBottom: '30px' };
