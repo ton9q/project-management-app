@@ -14,5 +14,5 @@ const urls = {
 
 export const config = {
   urls,
-  appTitle: 'Project Management',
+  appTitle: 'Kanban App',
 };
