@@ -12,7 +12,7 @@ import Typography from '@mui/material/Typography';
 import { loginUser } from '../../services/api';
 import { config } from '../../config';
 import { LocalStorage } from '../../utils/localStorage';
-import { useAppDispatch, useAppSelector } from '../../store';
+import { useAppDispatch, useAppSelector } from '../../Store';
 import { Loading } from '../../components/Loading';
 import { onChangeLogin, onChangePassword, clearCurrentUser } from './formSignInReducer';
 

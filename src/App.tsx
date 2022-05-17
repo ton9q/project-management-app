@@ -16,7 +16,7 @@ import { NotFound } from './pages/NotFound';
 
 import { theme } from './theme';
 import { config } from './config';
-import { setupStore } from './store';
+import { setupStore } from './Store';
 
 function App() {
   const store = setupStore();
