@@ -17,7 +17,7 @@ import {
 import '../../App.css';
 
 export function SignUp() {
-  const { t } = useTranslation(['common', 'page_registration']);
+  const { t } = useTranslation(['common', 'pages_registration']);
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
   const { name, login, password } = useAppSelector((state) => state.formSignUpReducer.currentUser);
@@ -96,14 +96,17 @@ export function SignUp() {
               <TextField
                 {...register('name', {
                   required: true,
-                  pattern: { value: /^[A-Za-z]+$/i, message: 'only letters of the Latin alphabet' },
-                  minLength: { value: 2, message: 'min length 2 letters' },
+                  pattern: {
+                    value: /^[A-Za-z]+$/i,
+                    message: t('pages_registration:messages.only_letters'),
+                  },
+                  minLength: { value: 2, message: t('pages_registration:messages.min_length2') },
                 })}
                 style={inputModal}
                 name="name"
                 value={name}
-                label={t('page_registration:user.name')}
-                placeholder={t('page_registration:placeholder.name')}
+                label={t('pages_registration:user.name')}
+                placeholder={t('pages_registration:placeholder.name')}
                 fullWidth
                 onChange={(e) => dispatch(onChangeName((e.target as HTMLInputElement).value))}
               />
@@ -113,14 +116,17 @@ export function SignUp() {
               <TextField
                 {...register('login', {
                   required: true,
-                  pattern: { value: /^[A-Za-z]+$/i, message: 'only letters of the Latin alphabet' },
-                  minLength: { value: 3, message: 'min length 3 letters' },
+                  pattern: {
+                    value: /^[A-Za-z]+$/i,
+                    message: t('pages_registration:messages.only_letters'),
+                  },
+                  minLength: { value: 3, message: t('pages_registration:messages.min_length3') },
                 })}
                 style={inputModal}
                 name="login"
                 value={login}
-                label={t('page_registration:user.login')}
-                placeholder={t('page_registration:placeholder.login')}
+                label={t('pages_registration:user.login')}
+                placeholder={t('pages_registration:placeholder.login')}
                 fullWidth
                 onChange={(e) => dispatch(onChangeLogin((e.target as HTMLInputElement).value))}
               />
@@ -130,14 +136,17 @@ export function SignUp() {
               <TextField
                 {...register('password', {
                   required: true,
-                  pattern: { value: /^[0-9]+$/g, message: 'only numbers' },
-                  minLength: { value: 3, message: 'min length 3 numbers' },
+                  pattern: {
+                    value: /^[0-9]+$/g,
+                    message: t('pages_registration:messages.only_numbers'),
+                  },
+                  minLength: { value: 3, message: t('pages_registration:messages.min_length3') },
                 })}
                 style={inputModal}
                 name="password"
                 value={password}
-                label={t('page_registration:user.password')}
-                placeholder={t('page_registration:placeholder.password')}
+                label={t('pages_registration:user.password')}
+                placeholder={t('pages_registration:placeholder.password')}
                 type="password"
                 fullWidth
                 onChange={(e) => dispatch(onChangePassword((e.target as HTMLInputElement).value))}
@@ -155,7 +164,7 @@ export function SignUp() {
               {t('common:navbar.sign_up')}
             </Button>
             <Typography>
-              Do you have an account?&nbsp;
+              {t('pages_registration:account')}
               <Link to={config.urls.public.signIn}>{t('common:navbar.sign_in')}</Link>
             </Typography>
           </form>

@@ -12,8 +12,8 @@
   "messages": {
     "only_letters": "only letters of the Latin alphabet",
     "min_length2": "min length 2 letters",
-    "min_length3_letters": "min length 3 letters",
-    "min_length3_symbol": "min length 3 symbol",
+    "min_length3": "min length 3 letters",
     "only_numbers": "only numbers"
-  }
+  },
+  "account": "Do you have an account? "
 }
