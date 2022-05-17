@@ -1,4 +1,4 @@
-import { useEffect, useState, useCallback } from 'react';
+import { useEffect, useState, useCallback, Suspense } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { AxiosError } from 'axios';
@@ -7,7 +7,7 @@ import { Box, Grid, Paper, TextField, Typography, Button } from '@mui/material';
 import { createUser } from '../../services/SignInUpService';
 import { config } from '../../config';
 import { useAppDispatch, useAppSelector } from '../../hooks/redux';
-import Spinner from '../../components/Spinner/Spinner';
+import { Loading } from '../../components/Loading';
 import {
   onChangeName,
   onChangeLogin,
@@ -81,95 +81,95 @@ export function SignUp() {
   const btnModalSubmit = { marginBottom: '12px', height: '40px' };
   const inputModal = { marginBottom: '30px' };
 
-  return isCreating ? (
-    <Spinner />
-  ) : (
-    <Box
-      component="main"
-      sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', py: 5, px: 2 }}
-    >
-      <Grid className="login-modal">
-        <Paper elevation={24} className="form-container">
-          <form onSubmit={handleSubmit(onSubmit)}>
-            <h2 className="form-title">{t('common:navbar.sign_up')}</h2>
-            <div className="form-container-input-message">
-              <TextField
-                {...register('name', {
-                  required: true,
-                  pattern: {
-                    value: /^[A-Za-z]+$/i,
-                    message: t('pages_registration:messages.only_letters'),
-                  },
-                  minLength: { value: 2, message: t('pages_registration:messages.min_length2') },
-                })}
-                style={inputModal}
-                name="name"
-                value={name}
-                label={t('pages_registration:user.name')}
-                placeholder={t('pages_registration:placeholder.name')}
+  return (
+    <Suspense fallback={<Loading fullScreen />}>
+      <Box
+        component="main"
+        sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', py: 5, px: 2 }}
+      >
+        <Grid className="login-modal">
+          <Paper elevation={24} className="form-container">
+            <form onSubmit={handleSubmit(onSubmit)}>
+              <h2 className="form-title">{t('common:navbar.sign_up')}</h2>
+              <div className="form-container-input-message">
+                <TextField
+                  {...register('name', {
+                    required: true,
+                    pattern: {
+                      value: /^[A-Za-z]+$/i,
+                      message: t('pages_registration:messages.only_letters'),
+                    },
+                    minLength: { value: 2, message: t('pages_registration:messages.min_length2') },
+                  })}
+                  style={inputModal}
+                  name="name"
+                  value={name}
+                  label={t('pages_registration:user.name')}
+                  placeholder={t('pages_registration:placeholder.name')}
+                  fullWidth
+                  onChange={(e) => dispatch(onChangeName((e.target as HTMLInputElement).value))}
+                />
+                {errors.name && renderValidationMessage(errors.name?.message)}
+              </div>
+              <div className="form-container-input-message">
+                <TextField
+                  {...register('login', {
+                    required: true,
+                    pattern: {
+                      value: /^[A-Za-z]+$/i,
+                      message: t('pages_registration:messages.only_letters'),
+                    },
+                    minLength: { value: 3, message: t('pages_registration:messages.min_length3') },
+                  })}
+                  style={inputModal}
+                  name="login"
+                  value={login}
+                  label={t('pages_registration:user.login')}
+                  placeholder={t('pages_registration:placeholder.login')}
+                  fullWidth
+                  onChange={(e) => dispatch(onChangeLogin((e.target as HTMLInputElement).value))}
+                />
+                {errors.login && renderValidationMessage(errors.login?.message)}
+              </div>
+              <div className="form-container-input-message">
+                <TextField
+                  {...register('password', {
+                    required: true,
+                    pattern: {
+                      value: /^[0-9]+$/g,
+                      message: t('pages_registration:messages.only_numbers'),
+                    },
+                    minLength: { value: 3, message: t('pages_registration:messages.min_length3') },
+                  })}
+                  style={inputModal}
+                  name="password"
+                  value={password}
+                  label={t('pages_registration:user.password')}
+                  placeholder={t('pages_registration:placeholder.password')}
+                  type="password"
+                  fullWidth
+                  onChange={(e) => dispatch(onChangePassword((e.target as HTMLInputElement).value))}
+                />
+                {errors.password && renderValidationMessage(errors.password?.message)}
+                {userError && renderUserCreatingError(userError)}
+              </div>
+              <Button
+                type="submit"
+                color="primary"
+                variant="contained"
+                style={btnModalSubmit}
                 fullWidth
-                onChange={(e) => dispatch(onChangeName((e.target as HTMLInputElement).value))}
-              />
-              {errors.name && renderValidationMessage(errors.name?.message)}
-            </div>
-            <div className="form-container-input-message">
-              <TextField
-                {...register('login', {
-                  required: true,
-                  pattern: {
-                    value: /^[A-Za-z]+$/i,
-                    message: t('pages_registration:messages.only_letters'),
-                  },
-                  minLength: { value: 3, message: t('pages_registration:messages.min_length3') },
-                })}
-                style={inputModal}
-                name="login"
-                value={login}
-                label={t('pages_registration:user.login')}
-                placeholder={t('pages_registration:placeholder.login')}
-                fullWidth
-                onChange={(e) => dispatch(onChangeLogin((e.target as HTMLInputElement).value))}
-              />
-              {errors.login && renderValidationMessage(errors.login?.message)}
-            </div>
-            <div className="form-container-input-message">
-              <TextField
-                {...register('password', {
-                  required: true,
-                  pattern: {
-                    value: /^[0-9]+$/g,
-                    message: t('pages_registration:messages.only_numbers'),
-                  },
-                  minLength: { value: 3, message: t('pages_registration:messages.min_length3') },
-                })}
-                style={inputModal}
-                name="password"
-                value={password}
-                label={t('pages_registration:user.password')}
-                placeholder={t('pages_registration:placeholder.password')}
-                type="password"
-                fullWidth
-                onChange={(e) => dispatch(onChangePassword((e.target as HTMLInputElement).value))}
-              />
-              {errors.password && renderValidationMessage(errors.password?.message)}
-              {userError && renderUserCreatingError(userError)}
-            </div>
-            <Button
-              type="submit"
-              color="primary"
-              variant="contained"
-              style={btnModalSubmit}
-              fullWidth
-            >
-              {t('common:navbar.sign_up')}
-            </Button>
-            <Typography>
-              {t('pages_registration:account')}
-              <Link to={config.urls.public.signIn}>{t('common:navbar.sign_in')}</Link>
-            </Typography>
-          </form>
-        </Paper>
-      </Grid>
-    </Box>
+              >
+                {t('common:navbar.sign_up')}
+              </Button>
+              <Typography>
+                {t('pages_registration:account')}
+                <Link to={config.urls.public.signIn}>{t('common:navbar.sign_in')}</Link>
+              </Typography>
+            </form>
+          </Paper>
+        </Grid>
+      </Box>
+    </Suspense>
   );
 }
