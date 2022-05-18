@@ -19,7 +19,7 @@ import { onChangeLogin, onChangePassword, clearCurrentUser } from './formSignInR
 const USER_INFO = 'userInfo';
 
 export function SignIn() {
-  const { t } = useTranslation(['common', 'pages_registration']);
+  const { t } = useTranslation(['common', 'pages_registration', 'form_message']);
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
   const { login, password } = useAppSelector((state) => state.formSignInReducer.currentUser);
@@ -124,9 +124,12 @@ export function SignIn() {
                     required: true,
                     pattern: {
                       value: /^[A-Za-z]+$/i,
-                      message: t('pages_registration:messages.only_letters'),
+                      message: t('form_message:message.only_letters'),
                     },
-                    minLength: { value: 3, message: t('pages_registration:messages.min_length3') },
+                    minLength: {
+                      value: 3,
+                      message: t('form_message:message.min_length', { num: 3 }),
+                    },
                   })}
                   style={inputModal}
                   name="login"
@@ -144,9 +147,12 @@ export function SignIn() {
                     required: true,
                     pattern: {
                       value: /^[0-9]+$/g,
-                      message: t('pages_registration:messages.only_numbers'),
+                      message: t('form_message:message.only_numbers'),
                     },
-                    minLength: { value: 3, message: t('pages_registration:messages.min_length3') },
+                    minLength: {
+                      value: 3,
+                      message: t('form_message:message.min_length', { num: 3 }),
+                    },
                   })}
                   style={inputModal}
                   name="password"

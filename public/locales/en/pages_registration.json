@@ -9,11 +9,5 @@
     "login": "Enter login",
     "password": "Enter password"
   },
-  "messages": {
-    "only_letters": "only letters of the Latin alphabet",
-    "min_length2": "min length 2 letters",
-    "min_length3": "min length 3 letters",
-    "only_numbers": "only numbers"
-  },
   "account": "Do you have an account? "
 }

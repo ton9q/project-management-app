@@ -21,7 +21,7 @@ import {
 } from './formSignUpReducer';
 
 export function SignUp() {
-  const { t } = useTranslation(['common', 'pages_registration']);
+  const { t } = useTranslation(['common', 'pages_registration', 'form_message']);
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
   const { name, login, password } = useAppSelector((state) => state.formSignUpReducer.currentUser);
@@ -130,9 +130,12 @@ export function SignUp() {
                     required: true,
                     pattern: {
                       value: /^[A-Za-z]+$/i,
-                      message: t('pages_registration:messages.only_letters'),
+                      message: t('form_message:message.only_letters'),
                     },
-                    minLength: { value: 2, message: t('pages_registration:messages.min_length2') },
+                    minLength: {
+                      value: 2,
+                      message: t('form_message:message.min_length', { num: 2 }),
+                    },
                   })}
                   style={inputModal}
                   name="name"
@@ -150,9 +153,12 @@ export function SignUp() {
                     required: true,
                     pattern: {
                       value: /^[A-Za-z]+$/i,
-                      message: t('pages_registration:messages.only_letters'),
+                      message: t('form_message:message.only_letters'),
                     },
-                    minLength: { value: 3, message: t('pages_registration:messages.min_length3') },
+                    minLength: {
+                      value: 3,
+                      message: t('form_message:message.min_length', { num: 3 }),
+                    },
                   })}
                   style={inputModal}
                   name="login"
@@ -170,9 +176,12 @@ export function SignUp() {
                     required: true,
                     pattern: {
                       value: /^[0-9]+$/g,
-                      message: t('pages_registration:messages.only_numbers'),
+                      message: t('form_message:message.only_numbers'),
                     },
-                    minLength: { value: 3, message: t('pages_registration:messages.min_length3') },
+                    minLength: {
+                      value: 3,
+                      message: t('form_message:message.min_length', { num: 3 }),
+                    },
                   })}
                   style={inputModal}
                   name="password"
