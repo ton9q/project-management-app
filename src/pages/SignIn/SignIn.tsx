@@ -1,4 +1,4 @@
-import { useEffect, useState, useCallback, Suspense } from 'react';
+import { useEffect, useCallback, Suspense } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { AxiosError } from 'axios';
@@ -15,6 +15,7 @@ import { LocalStorage } from '../../utils/localStorage';
 import { useAppDispatch, useAppSelector } from '../../appStore';
 import { Loading } from '../../components/Loading';
 import { onChangeLogin, onChangePassword, clearCurrentUser } from './formSignInReducer';
+import { togglerLoading, errorApi } from '../../services/apiReducer';
 
 const USER_INFO = 'userInfo';
 
@@ -23,6 +24,7 @@ export function SignIn() {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
   const { login, password } = useAppSelector((state) => state.formSignInReducer.currentUser);
+  const { loading, error } = useAppSelector((state) => state.apiReducer);
   const {
     register,
     handleSubmit,
@@ -35,35 +37,33 @@ export function SignIn() {
     },
   });
 
-  const [isLogin, setIsLogin] = useState(false);
-  const [userError, setUserError] = useState<string | undefined>('');
-
   const onLogin = useCallback(
     () =>
       loginUser({ login: login, password: password })
         .then((response) => {
           LocalStorage.setItem(USER_INFO, { login: login, token: response.data.token });
-          setIsLogin(false);
+          dispatch(togglerLoading(false));
           dispatch(clearCurrentUser());
           reset();
-          setUserError('');
+          dispatch(errorApi(''));
           navigate('/main');
         })
         .catch((error: AxiosError) => {
-          setIsLogin(false);
-          setUserError((error.response?.data as { statusCode: number; message: string }).message);
+          dispatch(
+            errorApi((error.response?.data as { statusCode: number; message: string }).message)
+          );
         }),
     [dispatch, login, password, navigate, reset]
   );
 
   useEffect(() => {
-    if (isLogin) {
+    if (loading) {
       onLogin();
     }
-  }, [isLogin, onLogin]);
+  }, [loading, onLogin]);
 
   const onSubmit = () => {
-    setIsLogin(true);
+    dispatch(togglerLoading(true));
   };
 
   const renderValidationMessage = useCallback(
@@ -85,7 +85,7 @@ export function SignIn() {
   );
 
   const renderUserSignInError = useCallback(
-    (userError: string) => (
+    (error: string) => (
       <span
         style={{
           position: 'absolute',
@@ -96,7 +96,7 @@ export function SignIn() {
           fontSize: '14px',
         }}
       >
-        {userError}
+        {error}
       </span>
     ),
     []
@@ -164,7 +164,7 @@ export function SignIn() {
                   onChange={(e) => dispatch(onChangePassword((e.target as HTMLInputElement).value))}
                 />
                 {errors.password && renderValidationMessage(errors.password?.message)}
-                {userError && renderUserSignInError(userError)}
+                {error && renderUserSignInError(error)}
               </Box>
               <Button
                 type="submit"

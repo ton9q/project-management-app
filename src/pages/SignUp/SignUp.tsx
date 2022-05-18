@@ -1,4 +1,4 @@
-import { useEffect, useState, useCallback, Suspense } from 'react';
+import { useEffect, useCallback, Suspense } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { AxiosError } from 'axios';
@@ -19,12 +19,14 @@ import {
   onChangePassword,
   clearCurrentUser,
 } from './formSignUpReducer';
+import { togglerLoading, errorApi } from '../../services/apiReducer';
 
 export function SignUp() {
   const { t } = useTranslation(['common', 'pages_registration', 'form_message']);
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
   const { name, login, password } = useAppSelector((state) => state.formSignUpReducer.currentUser);
+  const { loading, error } = useAppSelector((state) => state.apiReducer);
   const {
     register,
     handleSubmit,
@@ -38,9 +40,6 @@ export function SignUp() {
     },
   });
 
-  const [isCreating, setIsCreating] = useState(false);
-  const [userError, setUserError] = useState<string | undefined>('');
-
   const onCreating = useCallback(
     () =>
       createUser({
@@ -49,27 +48,29 @@ export function SignUp() {
         password: password,
       })
         .then(() => {
-          setIsCreating(false);
+          dispatch(togglerLoading(false));
           dispatch(clearCurrentUser());
           reset();
-          setUserError('');
+          dispatch(errorApi(''));
           navigate('/sign-in');
         })
         .catch((error: AxiosError) => {
-          setIsCreating(false);
-          setUserError((error.response?.data as { statusCode: number; message: string }).message);
+          dispatch(togglerLoading(false));
+          dispatch(
+            errorApi((error.response?.data as { statusCode: number; message: string }).message)
+          );
         }),
     [dispatch, name, login, password, navigate, reset]
   );
 
   useEffect(() => {
-    if (isCreating) {
+    if (loading) {
       onCreating();
     }
-  }, [isCreating, onCreating]);
+  }, [loading, onCreating]);
 
   const onSubmit = () => {
-    setIsCreating(true);
+    dispatch(togglerLoading(true));
   };
 
   const renderValidationMessage = useCallback(
@@ -91,7 +92,7 @@ export function SignUp() {
   );
 
   const renderUserCreatingError = useCallback(
-    (userError: string) => (
+    (error: string) => (
       <span
         style={{
           position: 'absolute',
@@ -102,7 +103,7 @@ export function SignUp() {
           fontSize: '14px',
         }}
       >
-        {userError}
+        {error}
       </span>
     ),
     []
@@ -193,7 +194,7 @@ export function SignUp() {
                   onChange={(e) => dispatch(onChangePassword((e.target as HTMLInputElement).value))}
                 />
                 {errors.password && renderValidationMessage(errors.password?.message)}
-                {userError && renderUserCreatingError(userError)}
+                {error && renderUserCreatingError(error)}
               </Box>
               <Button
                 type="submit"
