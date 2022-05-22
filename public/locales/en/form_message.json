@@ -1,0 +1,7 @@
+{
+  "message": {
+    "only_letters": "only letters of the Latin alphabet",
+    "min_length": "min length {{num}} symbols",
+    "only_numbers": "only numbers"
+  }
+}
