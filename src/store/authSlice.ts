@@ -31,6 +31,7 @@ export const authSlice = createSlice({
       state.isAuth = false;
       state.signUpSucceed = false;
     },
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     signUpSuccess(state: State, action: PayloadAction<User | null>) {
       //   state.currentUser = action.payload;
       state.isLoading = false;
@@ -47,6 +48,7 @@ export const authSlice = createSlice({
 
 export const { signUpStart, signUpSuccess, signUpError } = authSlice.actions;
 export const authSelector = (state: RootState) => state.auth;
+
 export default authSlice.reducer;
 
 export const signUp =
