@@ -1,12 +1,13 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
+import { RootState } from '../../store';
 
-interface FormSignUpState {
+interface State {
   name: string;
   login: string;
   password: string;
 }
 
-const initialState: FormSignUpState = {
+const initialState: State = {
   name: '',
   login: '',
   password: '',
@@ -16,16 +17,16 @@ export const formSignUpSlice = createSlice({
   name: 'formSignUp',
   initialState,
   reducers: {
-    onChangeName(state, action: PayloadAction<string>) {
+    onChangeName(state: State, action: PayloadAction<string>) {
       state.name = action.payload;
     },
-    onChangeLogin(state, action: PayloadAction<string>) {
+    onChangeLogin(state: State, action: PayloadAction<string>) {
       state.login = action.payload;
     },
-    onChangePassword(state, action: PayloadAction<string>) {
+    onChangePassword(state: State, action: PayloadAction<string>) {
       state.password = action.payload;
     },
-    clearCurrentUser(state) {
+    clearForm(state: State) {
       state.name = '';
       state.login = '';
       state.password = '';
@@ -33,6 +34,6 @@ export const formSignUpSlice = createSlice({
   },
 });
 
+export const { onChangeName, onChangeLogin, onChangePassword, clearForm } = formSignUpSlice.actions;
+export const formSelector = (state: RootState) => state.formSignUp;
 export default formSignUpSlice.reducer;
-export const { onChangeName, onChangeLogin, onChangePassword, clearCurrentUser } =
-  formSignUpSlice.actions;

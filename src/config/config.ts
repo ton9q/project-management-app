@@ -8,7 +8,7 @@ const urls = {
   },
 
   api: {
-    baseURL: 'https://frozen-shelf-14063.herokuapp.com/',
+    baseURL: 'https://frozen-shelf-14063.herokuapp.com',
   },
 };
 
