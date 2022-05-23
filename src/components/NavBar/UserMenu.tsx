@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import Box from '@mui/material/Box';
 import Tooltip from '@mui/material/Tooltip';
@@ -7,11 +8,15 @@ import Avatar from '@mui/material/Avatar';
 import Typography from '@mui/material/Typography';
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
+import { LocalStorage } from '../../utils/localStorage';
+import { config } from '../../config';
+import { TOKEN } from '../../pages/registration/SignIn/SignIn';
 
 const settings = ['navbar.profile', 'navbar.sign_out'] as const;
 
 export function UserMenu() {
   const { t } = useTranslation('common');
+  const navigate = useNavigate();
 
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
 
@@ -21,6 +26,13 @@ export function UserMenu() {
 
   const handleCloseMenu = () => {
     setAnchorEl(null);
+  };
+
+  const logOut = (event: React.MouseEvent<HTMLElement>) => {
+    if (event.currentTarget.innerText === 'Sign out') {
+      LocalStorage.removeItem(TOKEN);
+      navigate(config.urls.public.welcome);
+    }
   };
 
   return (
@@ -47,7 +59,13 @@ export function UserMenu() {
         onClose={handleCloseMenu}
       >
         {settings.map((setting) => (
-          <MenuItem key={setting} onClick={handleCloseMenu}>
+          <MenuItem
+            key={setting}
+            onClick={(event) => {
+              handleCloseMenu();
+              logOut(event);
+            }}
+          >
             <Typography textAlign="center">{t(setting)}</Typography>
           </MenuItem>
         ))}

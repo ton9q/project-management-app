@@ -18,7 +18,7 @@ import { onChangeLogin, onChangePassword, clearCurrentUser } from './formSignInR
 import { startLogin, loginError, loginSuccess } from '../../../services/apiReducer';
 import { MessageError } from '../SignUpInStyle';
 
-const TOKEN = 'token';
+export const TOKEN = 'token';
 
 export function SignIn() {
   const { t } = useTranslation(['common', 'pages_registration', 'form_message']);
