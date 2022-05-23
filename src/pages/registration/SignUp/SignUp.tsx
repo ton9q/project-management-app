@@ -9,29 +9,25 @@ import Grid from '@mui/material/Grid';
 import Paper from '@mui/material/Paper';
 import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
-import { createUser } from '../../services/api';
-import { config } from '../../config';
-import { useAppDispatch, useAppSelector } from '../../store';
-import { Loading } from '../../components/Loading';
+import { createUser } from '../../../services/api';
+import { config } from '../../../config';
+import { useAppDispatch, useAppSelector } from '../../../store';
+import { Loading } from '../../../components/Loading';
 import {
   onChangeName,
   onChangeLogin,
   onChangePassword,
   clearCurrentUser,
 } from './formSignUpReducer';
-import {
-  startCreating,
-  creatingError,
-  creatingSuccess,
-} from '../../services/apiCreatingUserReducer';
-import { MessageError, StyledTitle } from './SignUpStyle';
+import { startCreating, creatingError, creatingSuccess } from '../../../services/apiReducer';
+import { MessageError, StyledTitle } from '../SignUpInStyle';
 
 export function SignUp() {
   const { t } = useTranslation(['common', 'pages_registration', 'form_message']);
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
   const { name, login, password } = useAppSelector((state) => state.formSignUpReducer);
-  const { isCreating, errorCreating } = useAppSelector((state) => state.apiCreateUserReducer);
+  const { isCreating, errorCreating } = useAppSelector((state) => state.apiReducer);
   const {
     register,
     handleSubmit,
@@ -56,7 +52,7 @@ export function SignUp() {
         dispatch(creatingSuccess(response.data));
         dispatch(clearCurrentUser());
         reset();
-        navigate('/sign-in');
+        navigate(config.urls.public.signIn);
       })
       .catch((error: AxiosError) => {
         dispatch(

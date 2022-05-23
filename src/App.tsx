@@ -10,8 +10,8 @@ import { Layout } from './components/Layout';
 
 import { Welcome } from './pages/Welcome';
 import { Main } from './pages/Main';
-import { SignIn } from './pages/SignIn';
-import { SignUp } from './pages/SignUp';
+import { SignIn } from './pages/registration/SignIn';
+import { SignUp } from './pages/registration/SignUp';
 import { NotFound } from './pages/NotFound';
 
 import { theme } from './theme';

@@ -2,12 +2,14 @@ import { TypedUseSelectorHook, useSelector, useDispatch } from 'react-redux';
 import { configureStore } from '@reduxjs/toolkit';
 import { combineReducers } from 'redux';
 
-import apiCreateUserReducer from '../services/apiCreatingUserReducer';
-import formSignUpReducer from '../pages/SignUp/formSignUpReducer';
+import apiReducer from '../services/apiReducer';
+import formSignUpReducer from '../pages/registration/SignUp/formSignUpReducer';
+import formSignInReducer from '../pages/registration/SignIn/formSignInReducer';
 
 const rootReducer = combineReducers({
-  apiCreateUserReducer,
+  apiReducer,
   formSignUpReducer,
+  formSignInReducer,
 });
 
 export const setupStore = () => {
