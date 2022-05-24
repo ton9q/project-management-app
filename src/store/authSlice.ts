@@ -2,6 +2,7 @@ import { AxiosError } from 'axios';
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { RootState, AppThunk } from './store';
 import { ApiService } from '../services/api';
+import { showNotification } from './notificationsSlice';
 
 export type User = { id: string; name: string; login: string };
 export type SignUpUser = { name: string; login: string; password: string };
@@ -62,5 +63,11 @@ export const signUp =
       const error =
         err instanceof AxiosError ? err.response?.data.message || err.message : 'Unknown error';
       dispatch(signUpError(error));
+      dispatch(
+        showNotification({
+          type: 'error',
+          message: error,
+        })
+      );
     }
   };
