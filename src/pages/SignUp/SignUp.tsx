@@ -27,7 +27,7 @@ export function SignUp() {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
 
-  const { isLoading, error: requestError, signUpSucceed } = useAppSelector(authSelector);
+  const { isLoading, signUpSucceed } = useAppSelector(authSelector);
 
   useEffect(() => {
     if (signUpSucceed) {
@@ -134,10 +134,6 @@ export function SignUp() {
                 />
                 <ErrorMessage $show={!!errors.password}>
                   {errors.password?.message || errorMessages.required}
-                </ErrorMessage>
-
-                <ErrorMessage $show={!!requestError} style={{ marginTop: 10 }}>
-                  {requestError}
                 </ErrorMessage>
               </InputContainer>
 

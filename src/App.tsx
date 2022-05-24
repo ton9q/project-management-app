@@ -7,6 +7,7 @@ import { ThemeProvider } from '@mui/material/styles';
 
 import { ErrorFallback } from './components/ErrorFallback';
 import { Layout } from './components/Layout';
+import { NotificationSnackbar } from './components/NotificationSnackbar';
 
 import { Welcome } from './pages/Welcome';
 import { Main } from './pages/Main';
@@ -37,6 +38,7 @@ function App() {
                   <Route path="*" element={<NotFound />} />
                 </Route>
               </Routes>
+              <NotificationSnackbar />
             </Box>
           </ErrorBoundary>
         </BrowserRouter>
