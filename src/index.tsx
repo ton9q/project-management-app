@@ -9,9 +9,11 @@ import reportWebVitals from './reportWebVitals';
 
 const root = ReactDOM.createRoot(document.getElementById('root') as HTMLElement);
 root.render(
-  <Suspense fallback={<Loading fullScreen />}>
-    <App />
-  </Suspense>
+  <React.StrictMode>
+    <Suspense fallback={<Loading fullScreen />}>
+      <App />
+    </Suspense>
+  </React.StrictMode>
 );
 
 // If you want to start measuring performance in your app, pass a function

@@ -1,0 +1,13 @@
+{
+  "user": {
+    "name": "Name",
+    "login": "Login",
+    "password": "Password"
+  },
+  "placeholder": {
+    "name": "Enter username",
+    "login": "Enter login",
+    "password": "Enter password"
+  },
+  "account": "Do you have an account? "
+}
