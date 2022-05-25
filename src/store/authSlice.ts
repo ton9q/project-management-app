@@ -11,7 +11,7 @@ export type User = { id: string; name: string; login: string };
 export type SignUpUser = { name: string; login: string; password: string };
 export type SignInUser = Omit<SignUpUser, 'name'>;
 
-export const tokenStorageVariable = 'token';
+export const accessTokenStorageVariable = 'accessToken';
 
 interface State {
   currentUser: User | null;
@@ -100,7 +100,7 @@ export const signIn =
       dispatch(signInStart());
       const tokenData = await ApiService.signIn(user);
       dispatch(signInSuccess(tokenData));
-      LocalStorage.setItem(tokenStorageVariable, tokenData);
+      LocalStorage.setItem(accessTokenStorageVariable, tokenData);
     } catch (err) {
       const error =
         err instanceof AxiosError ? err.response?.data.message || err.message : 'Unknown error';
