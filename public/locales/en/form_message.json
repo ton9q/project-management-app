@@ -2,6 +2,7 @@
   "message": {
     "only_letters": "only letters of the Latin alphabet",
     "min_length": "min length {{num}} symbols",
-    "only_numbers": "only numbers"
+    "only_numbers": "only numbers",
+    "required": "this field is required"
   }
 }

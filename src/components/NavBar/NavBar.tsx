@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { useNavigate, useLocation } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 
 import AppBar from '@mui/material/AppBar';
@@ -15,6 +15,7 @@ import { MobileMenuItems } from './MobileMenuItems';
 
 import { LocalStorage } from '../../utils/localStorage';
 import { config, localization } from '../../config';
+import { accessTokenStorageVariable } from '../../store/authSlice';
 import { IHandleOpenMenu, IHandleCloseMenu } from './common';
 import { LanguageSwitcher } from './LanguageSwitcher';
 import { UserMenu } from './UserMenu';
@@ -33,7 +34,6 @@ function AppLogo() {
 
 export function NavBar() {
   const navigate = useNavigate();
-  const location = useLocation();
   const { t, i18n } = useTranslation('common');
 
   const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
@@ -58,12 +58,13 @@ export function NavBar() {
     setLanguage(language);
   };
 
+  const isUserAuthorized = LocalStorage.getItem(accessTokenStorageVariable);
+
   return (
     <AppBar position="sticky">
       <Container maxWidth="xl">
         <Toolbar disableGutters sx={{ display: 'flex', justifyContent: 'space-between' }}>
-          {/* Change logic when user sign in. */}
-          {location.pathname !== config.urls.public.main ? (
+          {!isUserAuthorized ? (
             <>
               <AppLogo />
               <Box sx={{ display: 'flex', gap: '10px', alignItems: 'center' }}>
