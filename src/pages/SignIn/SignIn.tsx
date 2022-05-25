@@ -16,18 +16,15 @@ import { Loading } from '../../components/Loading';
 import { InputContainer, ErrorMessage, FormTitle } from '../../components/formComponents';
 
 import { useAppDispatch, useAppSelector } from '../../store';
-import { logInSelector, signIn as signInAction, SignInUser } from '../../store/loginSlice';
-
-const errorMessages = {
-  required: 'this field is required',
-};
+import { authSelector, signIn as signInAction, SignInUser } from '../../store/authSlice';
+import { errorMessages } from '../../config/form';
 
 export function SignIn() {
   const { t } = useTranslation(['common', 'pages_registration', 'form_message']);
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
 
-  const { isLoading, signInSucceed } = useAppSelector(logInSelector);
+  const { isLoading, signInSucceed } = useAppSelector(authSelector);
 
   useEffect(() => {
     if (signInSucceed) {
@@ -53,6 +50,8 @@ export function SignIn() {
     dispatch(signInAction(user));
   };
 
+  const requiredErrorMessage = t(errorMessages.required);
+
   return (
     <>
       {isLoading && <Loading />}
@@ -61,7 +60,7 @@ export function SignIn() {
         component="main"
         sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', py: 5, px: 2 }}
       >
-        <Grid className="login-modal">
+        <Grid>
           <Paper elevation={24} sx={{ padding: '20px', width: '350px', margin: '20px' }}>
             <form onSubmit={handleFormSubmit(handleSubmit)}>
               <FormTitle>{t('common:navbar.sign_in')}</FormTitle>
@@ -85,7 +84,7 @@ export function SignIn() {
                   fullWidth
                 />
                 <ErrorMessage $show={!!errors.login}>
-                  {errors.login?.message || errorMessages.required}
+                  {errors.login?.message || requiredErrorMessage}
                 </ErrorMessage>
               </InputContainer>
 
@@ -109,7 +108,7 @@ export function SignIn() {
                   fullWidth
                 />
                 <ErrorMessage $show={!!errors.password}>
-                  {errors.password?.message || errorMessages.required}
+                  {errors.password?.message || requiredErrorMessage}
                 </ErrorMessage>
               </InputContainer>
 

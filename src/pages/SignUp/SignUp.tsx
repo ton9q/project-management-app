@@ -17,10 +17,7 @@ import { InputContainer, ErrorMessage, FormTitle } from '../../components/formCo
 
 import { useAppDispatch, useAppSelector } from '../../store';
 import { authSelector, signUp as signUpAction, SignUpUser } from '../../store/authSlice';
-
-const errorMessages = {
-  required: 'this field is required',
-};
+import { errorMessages } from '../../config/form';
 
 export function SignUp() {
   const { t } = useTranslation(['common', 'pages_registration', 'form_message']);
@@ -54,6 +51,8 @@ export function SignUp() {
     dispatch(signUpAction(user));
   };
 
+  const requiredErrorMessage = t(errorMessages.required);
+
   return (
     <>
       {isLoading && <Loading />}
@@ -62,7 +61,7 @@ export function SignUp() {
         component="main"
         sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', py: 5, px: 2 }}
       >
-        <Grid className="login-modal">
+        <Grid>
           <Paper elevation={24} sx={{ padding: '20px', width: '350px', margin: '20px' }}>
             <form onSubmit={handleFormSubmit(handleSubmit)}>
               <FormTitle>{t('common:navbar.sign_up')}</FormTitle>
@@ -86,7 +85,7 @@ export function SignUp() {
                   fullWidth
                 />
                 <ErrorMessage $show={!!errors.name}>
-                  {errors.name?.message || 'this field is required'}
+                  {errors.name?.message || requiredErrorMessage}
                 </ErrorMessage>
               </InputContainer>
 
@@ -109,7 +108,7 @@ export function SignUp() {
                   fullWidth
                 />
                 <ErrorMessage $show={!!errors.login}>
-                  {errors.login?.message || errorMessages.required}
+                  {errors.login?.message || requiredErrorMessage}
                 </ErrorMessage>
               </InputContainer>
 
@@ -133,7 +132,7 @@ export function SignUp() {
                   fullWidth
                 />
                 <ErrorMessage $show={!!errors.password}>
-                  {errors.password?.message || errorMessages.required}
+                  {errors.password?.message || requiredErrorMessage}
                 </ErrorMessage>
               </InputContainer>
 
