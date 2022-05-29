@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 
 import AppBar from '@mui/material/AppBar';
@@ -34,6 +34,7 @@ function AppLogo() {
 
 export function NavBar() {
   const navigate = useNavigate();
+  const location = useLocation();
   const { t, i18n } = useTranslation('common');
 
   const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
@@ -79,19 +80,33 @@ export function NavBar() {
             </>
           ) : (
             <>
-              <Box sx={{ display: 'flex', alignItems: 'center' }}>
-                <AppLogo />
-                <DesktopMenuItems handleCloseNavMenu={handleCloseNavMenu} />
-                <MobileMenuItems
-                  anchorElNav={anchorEl}
-                  handleOpenNavMenu={handleOpenNavMenu}
-                  handleCloseNavMenu={handleCloseNavMenu}
-                />
-              </Box>
-              <Box sx={{ display: 'flex', gap: '10px', alignItems: 'center' }}>
-                <LanguageSwitcher language={language} onChange={handleLanguageChange} />
-                <UserMenu />
-              </Box>
+              {location.pathname === config.urls.public.welcome ? (
+                <>
+                  <AppLogo />
+                  <Box sx={{ display: 'flex', gap: '10px', alignItems: 'center' }}>
+                    <LanguageSwitcher language={language} onChange={handleLanguageChange} />
+                    <Button onClick={() => navigate('/main')} variant="contained">
+                      {t('navbar.go_main')}
+                    </Button>
+                  </Box>
+                </>
+              ) : (
+                <>
+                  <Box sx={{ display: 'flex', alignItems: 'center' }}>
+                    <DesktopMenuItems handleCloseNavMenu={handleCloseNavMenu} />
+                    <MobileMenuItems
+                      anchorElNav={anchorEl}
+                      handleOpenNavMenu={handleOpenNavMenu}
+                      handleCloseNavMenu={handleCloseNavMenu}
+                    />
+                    <AppLogo />
+                  </Box>
+                  <Box sx={{ display: 'flex', gap: '10px', alignItems: 'center' }}>
+                    <LanguageSwitcher language={language} onChange={handleLanguageChange} />
+                    <UserMenu />
+                  </Box>
+                </>
+              )}
             </>
           )}
         </Toolbar>
