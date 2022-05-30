@@ -4,7 +4,8 @@
     "sign_up": "Sign up",
     "sign_out": "Sign out",
     "profile": "Profile",
-    "open_settings": "Open settings"
+    "open_settings": "Open settings",
+    "go_main": "Go to Main Page"
   },
   "pages": {
     "welcome": "Welcome",

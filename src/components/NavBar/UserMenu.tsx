@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import Box from '@mui/material/Box';
 import Tooltip from '@mui/material/Tooltip';
@@ -7,11 +8,27 @@ import Avatar from '@mui/material/Avatar';
 import Typography from '@mui/material/Typography';
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
-
-const settings = ['navbar.profile', 'navbar.sign_out'] as const;
+import { LocalStorage } from '../../utils/localStorage';
+import { config } from '../../config';
+import { accessTokenStorageVariable } from '../../store/authSlice';
 
 export function UserMenu() {
+  const navigate = useNavigate();
   const { t } = useTranslation('common');
+
+  const profile = () => {
+    navigate(config.urls.public.editProfile);
+  };
+
+  const logOut = () => {
+    LocalStorage.removeItem(accessTokenStorageVariable);
+    navigate(config.urls.public.welcome);
+  };
+
+  const settings = [
+    { key: 'navbar.profile', onClick: profile },
+    { key: 'navbar.sign_out', onClick: logOut },
+  ] as const;
 
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
 
@@ -47,8 +64,14 @@ export function UserMenu() {
         onClose={handleCloseMenu}
       >
         {settings.map((setting) => (
-          <MenuItem key={setting} onClick={handleCloseMenu}>
-            <Typography textAlign="center">{t(setting)}</Typography>
+          <MenuItem
+            key={setting.key}
+            onClick={() => {
+              handleCloseMenu();
+              setting.onClick();
+            }}
+          >
+            <Typography textAlign="center">{t(setting.key)}</Typography>
           </MenuItem>
         ))}
       </Menu>
