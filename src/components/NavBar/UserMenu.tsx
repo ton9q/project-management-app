@@ -12,11 +12,23 @@ import { LocalStorage } from '../../utils/localStorage';
 import { config } from '../../config';
 import { accessTokenStorageVariable } from '../../store/authSlice';
 
-const settings = ['navbar.profile', 'navbar.sign_out'] as const;
-
 export function UserMenu() {
   const navigate = useNavigate();
   const { t } = useTranslation('common');
+
+  const profile = () => {
+    navigate(config.urls.public.editProfile);
+  };
+
+  const logOut = () => {
+    LocalStorage.removeItem(accessTokenStorageVariable);
+    navigate(config.urls.public.welcome);
+  };
+
+  const settings = [
+    { key: 'navbar.profile', onClick: profile },
+    { key: 'navbar.sign_out', onClick: logOut },
+  ] as const;
 
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
 
@@ -26,13 +38,6 @@ export function UserMenu() {
 
   const handleCloseMenu = () => {
     setAnchorEl(null);
-  };
-
-  const logOut = (event: React.MouseEvent<HTMLElement>) => {
-    if (event.currentTarget.innerText === 'Sign out') {
-      LocalStorage.removeItem(accessTokenStorageVariable);
-      navigate(config.urls.public.welcome);
-    }
   };
 
   return (
@@ -60,13 +65,13 @@ export function UserMenu() {
       >
         {settings.map((setting) => (
           <MenuItem
-            key={setting}
-            onClick={(event) => {
+            key={setting.key}
+            onClick={() => {
               handleCloseMenu();
-              logOut(event);
+              setting.onClick();
             }}
           >
-            <Typography textAlign="center">{t(setting)}</Typography>
+            <Typography textAlign="center">{t(setting.key)}</Typography>
           </MenuItem>
         ))}
       </Menu>

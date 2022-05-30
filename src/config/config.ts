@@ -5,6 +5,7 @@ const urls = {
     main: '/main',
     signIn: '/sign-in',
     signUp: '/sign-up',
+    editProfile: 'edit-profile',
   },
 
   api: {

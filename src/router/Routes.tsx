@@ -5,6 +5,7 @@ import { Main } from '../pages/Main';
 import { SignIn } from '../pages/SignIn';
 import { SignUp } from '../pages/SignUp';
 import { NotFound } from '../pages/NotFound';
+import { EditProfile } from '../pages/EditProfile';
 
 import { Layout } from '../components/Layout';
 
@@ -41,6 +42,14 @@ export const Routes = () => {
           element={
             <ProtectedRoute allowed={!token} redirectPath={config.urls.public.main}>
               <SignUp />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path={config.urls.public.editProfile}
+          element={
+            <ProtectedRoute allowed={token} redirectPath={config.urls.public.main}>
+              <EditProfile />
             </ProtectedRoute>
           }
         />
