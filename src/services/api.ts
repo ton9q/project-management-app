@@ -22,4 +22,16 @@ export class ApiService {
     });
     return response.data;
   }
+
+  static async editProfile(id: string, user: SignUpUser, token: string) {
+    const response = await axios({
+      method: 'put',
+      url: `${baseURL}/users/${id}`,
+      data: user,
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+    return response.data;
+  }
 }

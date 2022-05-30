@@ -19,6 +19,7 @@ interface State {
   error: string | null;
   signUpSucceed: boolean;
   signInSucceed: boolean;
+  editProfileSucceed: boolean;
 }
 
 const initialState: State = {
@@ -27,6 +28,7 @@ const initialState: State = {
   error: null,
   signUpSucceed: false,
   signInSucceed: false,
+  editProfileSucceed: false,
 };
 
 export const authSlice = createSlice({
@@ -64,11 +66,36 @@ export const authSlice = createSlice({
       state.isLoading = false;
       state.signInSucceed = false;
     },
+
+    editProfileStart(state: State) {
+      state.isLoading = true;
+      state.editProfileSucceed = false;
+    },
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    editProfileSuccess(state: State, action: PayloadAction<User | null>) {
+      //   state.currentUser = action.payload;
+      state.isLoading = false;
+      state.editProfileSucceed = true;
+    },
+    editProfileError(state: State, action: PayloadAction<string>) {
+      state.error = action.payload;
+      state.isLoading = false;
+      state.editProfileSucceed = false;
+    },
   },
 });
 
-export const { signUpStart, signUpSuccess, signUpError, signInStart, signInSuccess, signInError } =
-  authSlice.actions;
+export const {
+  signUpStart,
+  signUpSuccess,
+  signUpError,
+  signInStart,
+  signInSuccess,
+  signInError,
+  editProfileStart,
+  editProfileSuccess,
+  editProfileError,
+} = authSlice.actions;
 export const authSelector = (state: RootState) => state.auth;
 
 export default authSlice.reducer;
@@ -105,6 +132,26 @@ export const signIn =
       const error =
         err instanceof AxiosError ? err.response?.data.message || err.message : 'Unknown error';
       dispatch(signInError(error));
+      dispatch(
+        showNotification({
+          type: 'error',
+          message: error,
+        })
+      );
+    }
+  };
+
+export const editProfile =
+  (id: string, user: SignUpUser, token: string): AppThunk =>
+  async (dispatch) => {
+    try {
+      dispatch(editProfileStart());
+      const newUserData = await ApiService.editProfile(id, user, token);
+      dispatch(editProfileSuccess(newUserData));
+    } catch (err) {
+      const error =
+        err instanceof AxiosError ? err.response?.data.message || err.message : 'Unknown error';
+      dispatch(editProfileError(error));
       dispatch(
         showNotification({
           type: 'error',
