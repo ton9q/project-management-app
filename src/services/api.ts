@@ -34,4 +34,15 @@ export class ApiService {
     });
     return response.data;
   }
+
+  static async deleteAccount(id: string, token: string) {
+    const response = await axios({
+      method: 'delete',
+      url: `${baseURL}/users/${id}`,
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+    return response.data;
+  }
 }

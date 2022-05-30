@@ -20,6 +20,7 @@ interface State {
   signUpSucceed: boolean;
   signInSucceed: boolean;
   editProfileSucceed: boolean;
+  deleteAccountSucceed: boolean;
 }
 
 const initialState: State = {
@@ -29,6 +30,7 @@ const initialState: State = {
   signUpSucceed: false,
   signInSucceed: false,
   editProfileSucceed: false,
+  deleteAccountSucceed: false,
 };
 
 export const authSlice = createSlice({
@@ -82,6 +84,20 @@ export const authSlice = createSlice({
       state.isLoading = false;
       state.editProfileSucceed = false;
     },
+
+    deleteAccountStart(state: State) {
+      state.isLoading = true;
+      state.deleteAccountSucceed = false;
+    },
+    deleteAccountSuccess(state: State) {
+      state.isLoading = false;
+      state.deleteAccountSucceed = true;
+    },
+    deleteAccountError(state: State, action: PayloadAction<string>) {
+      state.error = action.payload;
+      state.isLoading = false;
+      state.deleteAccountSucceed = false;
+    },
   },
 });
 
@@ -95,6 +111,9 @@ export const {
   editProfileStart,
   editProfileSuccess,
   editProfileError,
+  deleteAccountStart,
+  deleteAccountSuccess,
+  deleteAccountError,
 } = authSlice.actions;
 export const authSelector = (state: RootState) => state.auth;
 
@@ -152,6 +171,26 @@ export const editProfile =
       const error =
         err instanceof AxiosError ? err.response?.data.message || err.message : 'Unknown error';
       dispatch(editProfileError(error));
+      dispatch(
+        showNotification({
+          type: 'error',
+          message: error,
+        })
+      );
+    }
+  };
+
+export const deleteAccount =
+  (id: string, token: string): AppThunk =>
+  async (dispatch) => {
+    try {
+      dispatch(deleteAccountStart());
+      await ApiService.deleteAccount(id, token);
+      dispatch(deleteAccountSuccess());
+    } catch (err) {
+      const error =
+        err instanceof AxiosError ? err.response?.data.message || err.message : 'Unknown error';
+      dispatch(deleteAccountError(error));
       dispatch(
         showNotification({
           type: 'error',

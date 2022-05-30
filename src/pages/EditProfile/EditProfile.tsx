@@ -13,7 +13,12 @@ import TextField from '@mui/material/TextField';
 import { config } from '../../config';
 
 import { Loading } from '../../components/Loading';
-import { InputContainer, ErrorMessage, FormTitle } from '../../components/formComponents';
+import {
+  InputContainer,
+  ErrorMessage,
+  FormTitle,
+  ButtonContainer,
+} from '../../components/formComponents';
 
 import { useAppDispatch, useAppSelector } from '../../store';
 import { errorMessages } from '../../config/form';
@@ -21,6 +26,7 @@ import {
   accessTokenStorageVariable,
   authSelector,
   editProfile as editProfileAction,
+  deleteAccount as deleteAccountAction,
   SignUpUser,
 } from '../../store/authSlice';
 
@@ -34,7 +40,7 @@ export function EditProfile() {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
 
-  const { isLoading, editProfileSucceed } = useAppSelector(authSelector);
+  const { isLoading, editProfileSucceed, deleteAccountSucceed } = useAppSelector(authSelector);
 
   const {
     register,
@@ -67,8 +73,20 @@ export function EditProfile() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [editProfileSucceed]);
 
+  useEffect(() => {
+    if (deleteAccountSucceed) {
+      reset();
+      LocalStorage.removeItem(accessTokenStorageVariable);
+      navigate(config.urls.public.welcome);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [deleteAccountSucceed]);
+
   const handleSubmit = (user: SignUpUser) => {
     dispatch(editProfileAction(id, user, token));
+  };
+  const onDeleteAccount = () => {
+    dispatch(deleteAccountAction(id, token));
   };
 
   const requiredErrorMessage = t(errorMessages.required);
@@ -156,15 +174,27 @@ export function EditProfile() {
                 </ErrorMessage>
               </InputContainer>
 
-              <Button
-                type="submit"
-                color="primary"
-                variant="contained"
-                style={{ marginBottom: '12px', height: '40px' }}
-                fullWidth
-              >
-                {t('edit_profile:submitBtn')}
-              </Button>
+              <ButtonContainer>
+                <Button
+                  type="submit"
+                  color="primary"
+                  variant="contained"
+                  style={{ marginBottom: '12px', height: '50px' }}
+                  fullWidth
+                >
+                  {t('edit_profile:submitBtn')}
+                </Button>
+
+                <Button
+                  color="primary"
+                  variant="contained"
+                  style={{ marginBottom: '12px', height: '50px' }}
+                  onClick={onDeleteAccount}
+                  fullWidth
+                >
+                  {t('edit_profile:deleteBtn')}
+                </Button>
+              </ButtonContainer>
             </form>
           </Paper>
         </Grid>

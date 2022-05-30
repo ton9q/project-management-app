@@ -1,4 +1,5 @@
 {
   "title": "Edit profile",
+  "deleteBtn": "delete account",
   "submitBtn": "update info"
 }
