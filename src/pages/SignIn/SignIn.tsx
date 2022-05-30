@@ -18,6 +18,7 @@ import { InputContainer, ErrorMessage, FormTitle } from '../../components/formCo
 import { useAppDispatch, useAppSelector } from '../../store';
 import { authSelector, signIn as signInAction, SignInUser } from '../../store/authSlice';
 import { errorMessages } from '../../config/form';
+import { usePrevious } from '../../hooks/usePrevious';
 
 export function SignIn() {
   const { t } = useTranslation(['common', 'pages_registration', 'form_message']);
@@ -25,11 +26,12 @@ export function SignIn() {
   const navigate = useNavigate();
 
   const { isLoading, signInSucceed } = useAppSelector(authSelector);
+  const prevSignInSucceed = usePrevious<boolean>(signInSucceed);
 
   useEffect(() => {
-    if (signInSucceed) {
+    if (typeof prevSignInSucceed == 'boolean' && !prevSignInSucceed && signInSucceed) {
       reset();
-      navigate('/main');
+      navigate(config.urls.public.main);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [signInSucceed]);

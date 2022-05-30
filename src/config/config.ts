@@ -2,14 +2,30 @@ const urls = {
   public: {
     root: '',
     welcome: '/',
-    main: '/main',
     signIn: '/sign-in',
     signUp: '/sign-up',
-    editProfile: 'edit-profile',
+    profile: {
+      edit: '/profile/edit',
+    },
+    main: '/boards',
+    board: (id: string) => `/boards/${id}`,
+  },
+
+  router: {
+    board: '/boards/:id',
   },
 
   api: {
     baseURL: 'https://frozen-shelf-14063.herokuapp.com',
+
+    auth: {
+      signIn: '/signin',
+      signUp: '/signup',
+    },
+
+    board: {
+      root: (id: string) => `/boards/${id}`,
+    },
   },
 };
 
