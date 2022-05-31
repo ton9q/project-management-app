@@ -1,4 +1,3 @@
-import { useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { useForm } from 'react-hook-form';
@@ -18,7 +17,7 @@ import { InputContainer, ErrorMessage, FormTitle } from '../../components/formCo
 import { useAppDispatch, useAppSelector } from '../../store';
 import { authSelector, signUp as signUpAction, SignUpUser } from '../../store/authSlice';
 import { errorMessages } from '../../config/form';
-import { usePrevious } from '../../hooks/usePrevious';
+import { useRequestSucceed } from '../../hooks/useRequestSucceed';
 
 export function SignUp() {
   const { t } = useTranslation(['common', 'pages_registration', 'form_message']);
@@ -26,15 +25,11 @@ export function SignUp() {
   const navigate = useNavigate();
 
   const { isLoading, signUpSucceed } = useAppSelector(authSelector);
-  const prevSignUpSucceed = usePrevious<boolean>(signUpSucceed);
 
-  useEffect(() => {
-    if (typeof prevSignUpSucceed == 'boolean' && !prevSignUpSucceed && signUpSucceed) {
-      reset();
-      navigate(config.urls.public.signIn);
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [signUpSucceed]);
+  useRequestSucceed(signUpSucceed, () => {
+    navigate(config.urls.public.signIn);
+    reset();
+  });
 
   const {
     register,

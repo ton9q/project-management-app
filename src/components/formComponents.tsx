@@ -18,9 +18,3 @@ export const FormTitle = styled.h2`
 export const InputContainer = styled.div`
   margin-bottom: 15px;
 `;
-
-export const ButtonContainer = styled.div`
-  display: flex;
-  width: 100%;
-  gap: 15px;
-`;

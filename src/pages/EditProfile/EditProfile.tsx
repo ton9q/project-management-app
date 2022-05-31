@@ -1,8 +1,8 @@
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { useForm } from 'react-hook-form';
-import jwt_decode from 'jwt-decode';
+import styled from '@emotion/styled';
 
 import Button from '@mui/material/Button';
 import Box from '@mui/material/Box';
@@ -10,37 +10,28 @@ import Grid from '@mui/material/Grid';
 import Paper from '@mui/material/Paper';
 import TextField from '@mui/material/TextField';
 
-import { config } from '../../config';
-
 import { Loading } from '../../components/Loading';
-import {
-  InputContainer,
-  ErrorMessage,
-  FormTitle,
-  ButtonContainer,
-} from '../../components/formComponents';
+import { InputContainer, ErrorMessage, FormTitle } from '../../components/formComponents';
 
-import { useAppDispatch, useAppSelector } from '../../store';
+import { config } from '../../config';
 import { errorMessages } from '../../config/form';
-import {
-  accessTokenStorageVariable,
-  authSelector,
-  editProfile as editProfileAction,
-  deleteAccount as deleteAccountAction,
-  SignUpUser,
-} from '../../store/authSlice';
+import { useAppDispatch, useAppSelector } from '../../store';
+import { userSelector, getProfile, editProfile, deleteProfile } from './userSlice';
+import { signOut, SignUpUser } from '../../store/authSlice';
+import { useRequestSucceed } from '../../hooks/useRequestSucceed';
 
-import { LocalStorage } from '../../utils/localStorage';
+const ButtonContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+`;
 
 export function EditProfile() {
-  const [token, setToken] = useState('');
-  const [id, setId] = useState('');
-
   const { t } = useTranslation(['common', 'pages_registration', 'form_message', 'edit_profile']);
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
 
-  const { isLoading, editProfileSucceed, deleteAccountSucceed } = useAppSelector(authSelector);
+  const { currentUser, isLoading, editProfileSucceed } = useAppSelector(userSelector);
 
   const {
     register,
@@ -49,154 +40,138 @@ export function EditProfile() {
     formState: { errors },
   } = useForm({
     defaultValues: {
-      name: '',
-      login: '',
+      name: currentUser?.name || '',
+      login: currentUser?.login || '',
       password: '',
     },
   });
 
   useEffect(() => {
-    setToken(LocalStorage.getItem(accessTokenStorageVariable).token);
-  }, []);
+    dispatch(getProfile());
+  }, [dispatch]);
 
   useEffect(() => {
-    if (token) {
-      setId((jwt_decode(token) as { userId: string; login: string; iat: number }).userId);
-    }
-  }, [token]);
-
-  useEffect(() => {
-    if (editProfileSucceed) {
-      reset();
-      navigate(config.urls.public.main);
+    if (currentUser) {
+      reset({
+        name: currentUser.name,
+        login: currentUser.login,
+      });
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [editProfileSucceed]);
+  }, [currentUser]);
 
-  useEffect(() => {
-    if (deleteAccountSucceed) {
-      reset();
-      LocalStorage.removeItem(accessTokenStorageVariable);
-      navigate(config.urls.public.welcome);
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [deleteAccountSucceed]);
+  useRequestSucceed(editProfileSucceed, () => {
+    navigate(config.urls.public.main);
+    reset();
+  });
 
-  const handleSubmit = (user: SignUpUser) => {
-    dispatch(editProfileAction(id, user, token));
+  const handleEditProfile = (userData: SignUpUser) => {
+    dispatch(editProfile(userData));
   };
-  const onDeleteAccount = () => {
-    dispatch(deleteAccountAction(id, token));
+
+  const handleDeleteProfile = async () => {
+    await dispatch(deleteProfile());
+    dispatch(signOut());
+    navigate(config.urls.public.welcome);
   };
 
   const requiredErrorMessage = t(errorMessages.required);
 
   return (
     <>
-      {isLoading && <Loading />}
-
       <Box
         component="main"
         sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', py: 5, px: 2 }}
       >
         <Grid>
-          <Paper elevation={24} sx={{ padding: '20px', width: '350px', margin: '20px' }}>
-            <form onSubmit={handleFormSubmit(handleSubmit)}>
-              <FormTitle>{t('edit_profile:title')}</FormTitle>
+          {isLoading && <Loading />}
+          {!isLoading && (
+            <Paper elevation={24} sx={{ padding: '20px', width: '350px', margin: '20px' }}>
+              <form onSubmit={handleFormSubmit(handleEditProfile)}>
+                <FormTitle>{t('edit_profile:title')}</FormTitle>
 
-              <InputContainer>
-                <TextField
-                  {...register('name', {
-                    required: true,
-                    pattern: {
-                      value: /^[A-Za-z]+$/i,
-                      message: t('form_message:message.only_letters'),
-                    },
-                    minLength: {
-                      value: 2,
-                      message: t('form_message:message.min_length', { num: 2 }),
-                    },
-                  })}
-                  name="name"
-                  label={t('pages_registration:user.name')}
-                  placeholder={t('pages_registration:placeholder.name')}
-                  fullWidth
-                />
-                <ErrorMessage $show={!!errors.name}>
-                  {errors.name?.message || requiredErrorMessage}
-                </ErrorMessage>
-              </InputContainer>
+                <InputContainer>
+                  <TextField
+                    {...register('name', {
+                      required: true,
+                      pattern: {
+                        value: /^[A-Za-z]+$/i,
+                        message: t('form_message:message.only_letters'),
+                      },
+                      minLength: {
+                        value: 2,
+                        message: t('form_message:message.min_length', { num: 2 }),
+                      },
+                    })}
+                    name="name"
+                    label={t('pages_registration:user.name')}
+                    placeholder={t('pages_registration:placeholder.name')}
+                    fullWidth
+                  />
+                  <ErrorMessage $show={!!errors.name}>
+                    {errors.name?.message || requiredErrorMessage}
+                  </ErrorMessage>
+                </InputContainer>
 
-              <InputContainer>
-                <TextField
-                  {...register('login', {
-                    required: true,
-                    pattern: {
-                      value: /^[A-Za-z]+$/i,
-                      message: t('form_message:message.only_letters'),
-                    },
-                    minLength: {
-                      value: 3,
-                      message: t('form_message:message.min_length', { num: 3 }),
-                    },
-                  })}
-                  name="login"
-                  label={t('pages_registration:user.login')}
-                  placeholder={t('pages_registration:placeholder.login')}
-                  fullWidth
-                />
-                <ErrorMessage $show={!!errors.login}>
-                  {errors.login?.message || requiredErrorMessage}
-                </ErrorMessage>
-              </InputContainer>
+                <InputContainer>
+                  <TextField
+                    {...register('login', {
+                      required: true,
+                      pattern: {
+                        value: /^[A-Za-z]+$/i,
+                        message: t('form_message:message.only_letters'),
+                      },
+                      minLength: {
+                        value: 3,
+                        message: t('form_message:message.min_length', { num: 3 }),
+                      },
+                    })}
+                    name="login"
+                    label={t('pages_registration:user.login')}
+                    placeholder={t('pages_registration:placeholder.login')}
+                    fullWidth
+                  />
+                  <ErrorMessage $show={!!errors.login}>
+                    {errors.login?.message || requiredErrorMessage}
+                  </ErrorMessage>
+                </InputContainer>
 
-              <InputContainer>
-                <TextField
-                  {...register('password', {
-                    required: true,
-                    pattern: {
-                      value: /^[0-9]+$/g,
-                      message: t('form_message:message.only_numbers'),
-                    },
-                    minLength: {
-                      value: 3,
-                      message: t('form_message:message.min_length', { num: 3 }),
-                    },
-                  })}
-                  name="password"
-                  label={t('pages_registration:user.password')}
-                  placeholder={t('pages_registration:placeholder.password')}
-                  type="password"
-                  fullWidth
-                />
-                <ErrorMessage $show={!!errors.password}>
-                  {errors.password?.message || requiredErrorMessage}
-                </ErrorMessage>
-              </InputContainer>
+                <InputContainer>
+                  <TextField
+                    {...register('password', {
+                      required: true,
+                      pattern: {
+                        value: /^[0-9]+$/g,
+                        message: t('form_message:message.only_numbers'),
+                      },
+                      minLength: {
+                        value: 3,
+                        message: t('form_message:message.min_length', { num: 3 }),
+                      },
+                    })}
+                    name="password"
+                    label={t('pages_registration:user.password')}
+                    placeholder={t('pages_registration:placeholder.password')}
+                    type="password"
+                    fullWidth
+                  />
+                  <ErrorMessage $show={!!errors.password}>
+                    {errors.password?.message || requiredErrorMessage}
+                  </ErrorMessage>
+                </InputContainer>
 
-              <ButtonContainer>
-                <Button
-                  type="submit"
-                  color="primary"
-                  variant="contained"
-                  style={{ marginBottom: '12px', height: '50px' }}
-                  fullWidth
-                >
-                  {t('edit_profile:submitBtn')}
-                </Button>
+                <ButtonContainer>
+                  <Button type="submit" variant="contained" fullWidth>
+                    {t('edit_profile:submitBtn')}
+                  </Button>
 
-                <Button
-                  color="primary"
-                  variant="contained"
-                  style={{ marginBottom: '12px', height: '50px' }}
-                  onClick={onDeleteAccount}
-                  fullWidth
-                >
-                  {t('edit_profile:deleteBtn')}
-                </Button>
-              </ButtonContainer>
-            </form>
-          </Paper>
+                  <Button color="error" variant="contained" onClick={handleDeleteProfile} fullWidth>
+                    {t('edit_profile:deleteBtn')}
+                  </Button>
+                </ButtonContainer>
+              </form>
+            </Paper>
+          )}
         </Grid>
       </Box>
     </>

@@ -10,12 +10,13 @@ import Typography from '@mui/material/Typography';
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
 
-import { LocalStorage } from '../../utils/localStorage';
 import { config } from '../../config';
-import { accessTokenStorageVariable } from '../../store/authSlice';
+import { signOut } from '../../store/authSlice';
+import { useAppDispatch } from '../../store';
 
 export function UserMenu() {
   const navigate = useNavigate();
+  const dispatch = useAppDispatch();
   const { t } = useTranslation('common');
 
   const handleProfileClick = () => {
@@ -23,7 +24,7 @@ export function UserMenu() {
   };
 
   const handleSignOutClick = () => {
-    LocalStorage.removeItem(accessTokenStorageVariable);
+    dispatch(signOut());
     navigate(config.urls.public.welcome);
   };
 

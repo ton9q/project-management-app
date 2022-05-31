@@ -1,48 +1,40 @@
-import axios from 'axios';
+import { RequestService } from './request';
 import { config } from '../config';
+import { Board } from '../pages/Board/types';
 import { SignUpUser, SignInUser } from '../store/authSlice';
+import { User } from '../pages/EditProfile/userSlice';
 
-const { baseURL } = config.urls.api;
+const urls = config.urls.api;
+const { baseURL } = urls;
 
 export class ApiService {
-  static async signUp(user: SignUpUser) {
-    const response = await axios({
-      method: 'post',
-      url: `${baseURL}/signup`,
-      data: user,
-    });
+  static async signUp(user: SignUpUser): Promise<User> {
+    const response = await RequestService.post(`${baseURL}${urls.auth.signUp}`, user);
     return response.data;
   }
 
-  static async signIn(user: SignInUser) {
-    const response = await axios({
-      method: 'post',
-      url: `${baseURL}/signin`,
-      data: user,
-    });
+  static async signIn(user: SignInUser): Promise<{ token: string }> {
+    const response = await RequestService.post(`${baseURL}${urls.auth.signIn}`, user);
     return response.data;
   }
 
-  static async editProfile(id: string, user: SignUpUser, token: string) {
-    const response = await axios({
-      method: 'put',
-      url: `${baseURL}/users/${id}`,
-      data: user,
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    });
+  static async getUser(id: string): Promise<User> {
+    const response = await RequestService.get(`${baseURL}${urls.users.byId(id)}`);
     return response.data;
   }
 
-  static async deleteAccount(id: string, token: string) {
-    const response = await axios({
-      method: 'delete',
-      url: `${baseURL}/users/${id}`,
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    });
+  static async editUser(id: string, user: SignUpUser): Promise<User> {
+    const response = await RequestService.put(`${baseURL}${urls.users.byId(id)}`, user);
+    return response.data;
+  }
+
+  static async deleteUser(id: string): Promise<null> {
+    const response = await RequestService.delete(`${baseURL}${urls.users.byId(id)}`);
+    return response.data;
+  }
+
+  static async getBoardDetails(boardId: string): Promise<Board> {
+    const response = await RequestService.get(`${baseURL}${urls.boards.byId(boardId)}`);
     return response.data;
   }
 }

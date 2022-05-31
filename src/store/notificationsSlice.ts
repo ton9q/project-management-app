@@ -20,14 +20,17 @@ export const notificationSlice = createSlice({
   initialState,
   reducers: {
     showNotification(state: State, action: PayloadAction<ActionNotification>) {
-      state.forEach((notification) => {
-        notification.show = false;
-      });
-      state.push({
-        ...action.payload,
-        id: String(Date.now()),
-        show: true,
-      });
+      return [
+        ...state.map((notification) => ({
+          ...notification,
+          show: false,
+        })),
+        {
+          ...action.payload,
+          id: String(Date.now()),
+          show: true,
+        },
+      ];
     },
     hideNotification(state: State, action: PayloadAction<Notification['id']>) {
       const notification = state.find((notification) => notification.id === action.payload);
@@ -49,4 +52,5 @@ export const notificationSlice = createSlice({
 export const { showNotification, hideNotification, removeNotification } = notificationSlice.actions;
 export const notificationsSelector = (state: RootState) => state.notifications;
 
-export default notificationSlice.reducer;
+export const notificationsReducer = notificationSlice.reducer;
+export default notificationsReducer;

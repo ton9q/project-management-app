@@ -11,11 +11,9 @@ import { ErrorFallback } from './components/ErrorFallback';
 import { NotificationSnackbar } from './components/NotificationSnackbar';
 
 import { theme } from './theme';
-import { setupStore } from './store';
+import { store } from './store';
 
 function App() {
-  const store = setupStore();
-
   return (
     <Provider store={store}>
       <ThemeProvider theme={theme}>
