@@ -6,7 +6,7 @@ const Main = lazy(() => import('../pages/Main'));
 const SignIn = lazy(() => import('../pages/SignIn'));
 const SignUp = lazy(() => import('../pages/SignUp'));
 const NotFound = lazy(() => import('../pages/NotFound'));
-const Board = lazy(() => import('../pages/Board'));
+// const Board = lazy(() => import('../pages/Board'));
 const EditProfile = lazy(() => import('../pages/EditProfile'));
 
 import { Layout } from '../components/Layout';
@@ -83,7 +83,8 @@ export const Routes = () => {
           element={
             <ProtectedRouteElement {...unauthorizedRedirectUrl}>
               <Suspense fallback={<Loading />}>
-                <Board />
+                {/* <Board /> */}
+                <div>Board</div>
               </Suspense>
             </ProtectedRouteElement>
           }
