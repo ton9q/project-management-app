@@ -60,6 +60,7 @@ export function NavBar() {
   };
 
   const isUserAuthorized = LocalStorage.getItem(accessTokenStorageVariable);
+  const isWelcomePage = location.pathname === config.urls.public.welcome;
 
   return (
     <AppBar position="sticky">
@@ -80,33 +81,28 @@ export function NavBar() {
             </>
           ) : (
             <>
-              {location.pathname === config.urls.public.welcome ? (
-                <>
-                  <AppLogo />
-                  <Box sx={{ display: 'flex', gap: '10px', alignItems: 'center' }}>
-                    <LanguageSwitcher language={language} onChange={handleLanguageChange} />
-                    <Button onClick={() => navigate('/main')} variant="contained">
-                      {t('navbar.go_main')}
-                    </Button>
-                  </Box>
-                </>
-              ) : (
-                <>
-                  <Box sx={{ display: 'flex', alignItems: 'center' }}>
+              <Box sx={{ display: 'flex', alignItems: 'center' }}>
+                <AppLogo />
+                {!isWelcomePage && (
+                  <>
                     <DesktopMenuItems handleCloseNavMenu={handleCloseNavMenu} />
                     <MobileMenuItems
                       anchorElNav={anchorEl}
                       handleOpenNavMenu={handleOpenNavMenu}
                       handleCloseNavMenu={handleCloseNavMenu}
                     />
-                    <AppLogo />
-                  </Box>
-                  <Box sx={{ display: 'flex', gap: '10px', alignItems: 'center' }}>
-                    <LanguageSwitcher language={language} onChange={handleLanguageChange} />
-                    <UserMenu />
-                  </Box>
-                </>
-              )}
+                  </>
+                )}
+              </Box>
+              <Box sx={{ display: 'flex', gap: '10px', alignItems: 'center' }}>
+                {isWelcomePage && (
+                  <Button onClick={() => navigate(config.urls.public.main)} variant="contained">
+                    {t('navbar.go_main')}
+                  </Button>
+                )}
+                <LanguageSwitcher language={language} onChange={handleLanguageChange} />
+                <UserMenu />
+              </Box>
             </>
           )}
         </Toolbar>

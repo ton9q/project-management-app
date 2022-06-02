@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
+
 import Box from '@mui/material/Box';
 import Tooltip from '@mui/material/Tooltip';
 import IconButton from '@mui/material/IconButton';
@@ -8,26 +9,28 @@ import Avatar from '@mui/material/Avatar';
 import Typography from '@mui/material/Typography';
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
-import { LocalStorage } from '../../utils/localStorage';
+
 import { config } from '../../config';
-import { accessTokenStorageVariable } from '../../store/authSlice';
+import { signOut } from '../../store/authSlice';
+import { useAppDispatch } from '../../store';
 
 export function UserMenu() {
   const navigate = useNavigate();
+  const dispatch = useAppDispatch();
   const { t } = useTranslation('common');
 
-  const profile = () => {
-    navigate(config.urls.public.editProfile);
+  const handleProfileClick = () => {
+    navigate(config.urls.public.profile.edit);
   };
 
-  const logOut = () => {
-    LocalStorage.removeItem(accessTokenStorageVariable);
+  const handleSignOutClick = () => {
+    dispatch(signOut());
     navigate(config.urls.public.welcome);
   };
 
   const settings = [
-    { key: 'navbar.profile', onClick: profile },
-    { key: 'navbar.sign_out', onClick: logOut },
+    { key: 'navbar.profile', onClick: handleProfileClick },
+    { key: 'navbar.sign_out', onClick: handleSignOutClick },
   ] as const;
 
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);

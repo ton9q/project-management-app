@@ -7,7 +7,7 @@ type Props = {
   children: ReactElement;
 };
 
-export const ProtectedRoute = ({ allowed, redirectPath, children }: Props) => {
+export const ProtectedRouteElement = ({ allowed, redirectPath, children }: Props) => {
   if (!allowed) {
     return <Navigate to={redirectPath} replace />;
   }

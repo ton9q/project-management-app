@@ -1,4 +1,3 @@
-import { useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { useForm } from 'react-hook-form';
@@ -18,6 +17,7 @@ import { InputContainer, ErrorMessage, FormTitle } from '../../components/formCo
 import { useAppDispatch, useAppSelector } from '../../store';
 import { authSelector, signIn as signInAction, SignInUser } from '../../store/authSlice';
 import { errorMessages } from '../../config/form';
+import { useRequestSucceed } from '../../hooks/useRequestSucceed';
 
 export function SignIn() {
   const { t } = useTranslation(['common', 'pages_registration', 'form_message']);
@@ -26,13 +26,10 @@ export function SignIn() {
 
   const { isLoading, signInSucceed } = useAppSelector(authSelector);
 
-  useEffect(() => {
-    if (signInSucceed) {
-      reset();
-      navigate('/main');
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [signInSucceed]);
+  useRequestSucceed(signInSucceed, () => {
+    navigate(config.urls.public.main);
+    reset();
+  });
 
   const {
     register,
